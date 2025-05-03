@@ -1,0 +1,87 @@
+import { useState } from "react";
+import { Link, useLocation } from "wouter";
+import { cn } from "@/lib/utils";
+import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { useMobile } from "@/hooks/use-mobile";
+
+const navigationItems = [
+  { name: "Home", href: "/" },
+  { name: "Services", href: "/services" },
+  { name: "Pricing", href: "/pricing" },
+  { name: "About Us", href: "/about" },
+  { name: "Contact", href: "/contact" },
+];
+
+export default function Navbar() {
+  const [location] = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isMobile = useMobile();
+  
+  return (
+    <header className="sticky top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/20">
+      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+        <Link href="/">
+          <a className="flex items-center">
+            <span className="text-2xl font-bold text-gradient">Aeonark Labs</span>
+          </a>
+        </Link>
+        
+        {/* Mobile menu button */}
+        <div className="md:hidden flex items-center gap-2">
+          <ThemeToggle />
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </Button>
+        </div>
+        
+        {/* Desktop navigation */}
+        <nav className="hidden md:flex md:items-center md:space-x-8">
+          {navigationItems.map((item) => (
+            <Link key={item.name} href={item.href}>
+              <a className={cn(
+                "relative text-foreground hover:text-[hsl(var(--neon-blue))] transition-colors py-2",
+                "after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-[hsl(var(--neon-blue))] after:to-[hsl(var(--neon-green))] after:transition-all after:duration-300",
+                "hover:after:w-full",
+                location === item.href && "after:w-full font-medium"
+              )}>
+                {item.name}
+              </a>
+            </Link>
+          ))}
+          <ThemeToggle />
+        </nav>
+      </div>
+      
+      {/* Mobile menu */}
+      {isMobile && (
+        <div className={cn(
+          "fixed inset-0 top-[57px] bg-background z-40 transition-transform duration-300 ease-in-out transform",
+          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        )}>
+          <div className="px-4 py-6 space-y-2 flex flex-col">
+            {navigationItems.map((item) => (
+              <Link key={item.name} href={item.href}>
+                <a 
+                  className={cn(
+                    "block py-3 px-4 text-lg rounded-md hover:bg-foreground/10 transition-colors",
+                    location === item.href && "font-medium text-[hsl(var(--neon-blue))]"
+                  )}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </a>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}
