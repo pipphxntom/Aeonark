@@ -52,6 +52,9 @@ export default function AboutSection() {
             <p className="text-foreground/80 leading-relaxed mb-6">
               Founded with a mission to democratize access to cutting-edge tech, Aeonark Labs builds affordable, powerful digital systems for startups and visionaries.
             </p>
+            <p className="text-foreground/80 leading-relaxed mb-6">
+              Based in Gurugram, India, our team of 10 talented professionals is revolutionizing how businesses adopt and leverage technology. We combine technical expertise with creative thinking to deliver solutions that drive real business growth.
+            </p>
             <p className="text-foreground/80 leading-relaxed">
               We believe in creating technology that not only solves problems but also empowers businesses to grow and thrive in the digital landscape. Our team is passionate about innovation, quality, and delivering exceptional value to our clients.
             </p>

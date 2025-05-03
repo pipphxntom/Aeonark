@@ -10,6 +10,7 @@ const tiers = [
     price: "₹9,999",
     color: "neon-blue",
     popular: false,
+    valueText: "",
     features: [
       "Static Website (5 pages)",
       "Mobile Responsive",
@@ -21,9 +22,10 @@ const tiers = [
   },
   {
     name: "Growth Pack",
-    price: "₹29,999",
+    price: "₹24,999",
     color: "neon-green",
     popular: true,
+    valueText: "Worth ₹40K+ in value",
     features: [
       "Web App or Website",
       "Custom Dashboard",
@@ -36,9 +38,10 @@ const tiers = [
   },
   {
     name: "Scale Pack",
-    price: "₹59,999+",
+    price: "Starts at ₹59,999",
     color: "neon-purple",
     popular: false,
+    valueText: "Node.js, Firebase, GPT-4 API",
     features: [
       "Full-stack App",
       "Advanced AI Integration",
@@ -91,11 +94,14 @@ export default function PricingTiers() {
                   <h3 className="text-xl font-semibold text-center">{tier.name}</h3>
                   <div className="text-center mt-4">
                     <span className="text-4xl font-bold">{tier.price}</span>
+                    {tier.valueText && (
+                      <p className="text-sm text-foreground/60 mt-1">{tier.valueText}</p>
+                    )}
                   </div>
                   {tier.popular && (
                     <div className="absolute top-4 right-4">
                       <span className={`bg-[hsl(var(--${tier.color}))] text-background text-xs px-2 py-1 rounded-full font-medium`}>
-                        Popular
+                        Most Popular
                       </span>
                     </div>
                   )}

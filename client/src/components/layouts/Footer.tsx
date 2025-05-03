@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { Linkedin, Instagram, MessageSquare } from "lucide-react";
 
 const navigationItems = [
   { name: "Home", href: "/" },
@@ -6,6 +7,12 @@ const navigationItems = [
   { name: "Pricing", href: "/pricing" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
+];
+
+const socialLinks = [
+  { name: "LinkedIn", href: "https://www.linkedin.com/company/aeonark-labs/", icon: Linkedin, color: "neon-blue" },
+  { name: "WhatsApp", href: "https://chat.whatsapp.com/DyqFra7IfF66RszqBLVs84", icon: MessageSquare, color: "neon-green" },
+  { name: "Instagram", href: "#", icon: Instagram, color: "neon-purple" },
 ];
 
 export default function Footer() {
@@ -17,6 +24,22 @@ export default function Footer() {
           <div className="mb-6 md:mb-0">
             <span className="text-2xl font-bold text-gradient">Aeonark Labs</span>
             <p className="text-foreground/60 mt-2">Building the digital future.</p>
+            
+            {/* Social Links */}
+            <div className="flex items-center gap-4 mt-4">
+              {socialLinks.map((link) => (
+                <a 
+                  key={link.name} 
+                  href={link.href} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className={`w-9 h-9 flex items-center justify-center rounded-full bg-[hsl(var(--${link.color}))]/10 text-[hsl(var(--${link.color}))] hover:bg-[hsl(var(--${link.color}))]/20 transition-colors`}
+                  aria-label={link.name}
+                >
+                  <link.icon className="h-5 w-5" />
+                </a>
+              ))}
+            </div>
           </div>
           <div className="flex flex-col items-center md:items-end">
             <nav className="flex flex-wrap justify-center md:justify-end gap-6 mb-4">

@@ -3,7 +3,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, MapPin, Linkedin, Github, MessageSquare, Calendar } from "lucide-react";
+import { Mail, MapPin, Linkedin, Instagram, MessageSquare, Calendar } from "lucide-react";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -135,7 +135,7 @@ export default function ContactForm() {
                   </div>
                   <div>
                     <h4 className="text-sm font-medium text-foreground/60">Location</h4>
-                    <p>Mumbai, India</p>
+                    <p>Gurugram, India</p>
                   </div>
                 </div>
               </div>
@@ -145,15 +145,15 @@ export default function ContactForm() {
             <div className="bg-background rounded-xl p-6 card-hover">
               <h3 className="text-xl font-semibold mb-4">Connect With Us</h3>
               <div className="grid grid-cols-2 gap-4">
-                <a href="#" className="flex items-center p-3 rounded-lg bg-card hover:bg-foreground/5 transition-all">
+                <a href="https://www.linkedin.com/company/aeonark-labs/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-lg bg-card hover:bg-foreground/5 transition-all">
                   <Linkedin className="h-5 w-5 text-[hsl(var(--neon-blue))] mr-3" />
                   <span>LinkedIn</span>
                 </a>
                 <a href="#" className="flex items-center p-3 rounded-lg bg-card hover:bg-foreground/5 transition-all">
-                  <Github className="h-5 w-5 text-[hsl(var(--neon-green))] mr-3" />
-                  <span>GitHub</span>
+                  <Instagram className="h-5 w-5 text-[hsl(var(--neon-green))] mr-3" />
+                  <span>Instagram</span>
                 </a>
-                <a href="#" className="flex items-center p-3 rounded-lg bg-card hover:bg-foreground/5 transition-all">
+                <a href="https://chat.whatsapp.com/DyqFra7IfF66RszqBLVs84" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-lg bg-card hover:bg-foreground/5 transition-all">
                   <MessageSquare className="h-5 w-5 text-[hsl(var(--neon-purple))] mr-3" />
                   <span>WhatsApp</span>
                 </a>
