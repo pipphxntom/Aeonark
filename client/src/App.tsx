@@ -8,6 +8,7 @@ import Services from "@/pages/Services";
 import Pricing from "@/pages/Pricing";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
+import Collaborations from "@/pages/Collaborations";
 import Navbar from "@/components/layouts/Navbar";
 import Footer from "@/components/layouts/Footer";
 
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/services" component={Services} />
       <Route path="/pricing" component={Pricing} />
       <Route path="/about" component={About} />
+      <Route path="/collaborations" component={Collaborations} />
       <Route path="/contact" component={Contact} />
       <Route component={NotFound} />
     </Switch>
