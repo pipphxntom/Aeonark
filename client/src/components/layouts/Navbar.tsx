@@ -19,7 +19,7 @@ export default function Navbar() {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isMobile = useMobile();
-  
+
   return (
     <header className="sticky top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/20">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -28,7 +28,7 @@ export default function Navbar() {
             <span className="text-2xl font-bold text-gradient">Aeonark Labs</span>
           </a>
         </Link>
-        
+
         {/* Mobile menu button */}
         <div className="md:hidden flex items-center gap-2">
           <ThemeToggle />
@@ -41,7 +41,7 @@ export default function Navbar() {
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
         </div>
-        
+
         {/* Desktop navigation */}
         <nav className="hidden md:flex md:items-center md:space-x-8">
           {navigationItems.map((item) => (
@@ -56,10 +56,13 @@ export default function Navbar() {
               </a>
             </Link>
           ))}
+          <Button variant="ghost" onClick={() => window.location.href = '/api/download'}>
+            Download Project
+          </Button>
           <ThemeToggle />
         </nav>
       </div>
-      
+
       {/* Mobile menu */}
       {isMobile && (
         <div className={cn(
