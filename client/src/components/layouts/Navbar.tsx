@@ -12,7 +12,7 @@ const navigationItems = [
   { name: "Services", href: "/services" },
   { name: "Pricing", href: "/pricing" },
   { name: "About Us", href: "/about" },
-  { name: "Collaborations", href: "/collaborations" },
+  { name: "Testimonials", href: "/testimonials" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -28,7 +28,7 @@ export default function Navbar() {
           <img 
             src={aeonarkLogo} 
             alt="Aeonark Labs" 
-            className="h-10 w-10 object-contain cursor-pointer"
+            className="h-12 w-12 object-contain cursor-pointer"
           />
         </Link>
 

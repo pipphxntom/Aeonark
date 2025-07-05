@@ -44,10 +44,10 @@ export default function Offerings() {
                 </div>
               </div>
               <div className="mt-auto">
-                <div className="flex items-center text-[hsl(var(--neon-blue))]">
+                <a href="/aeonforge" className="flex items-center text-[hsl(var(--neon-blue))] hover:underline cursor-pointer">
                   <span className="mr-2 font-medium">Learn more</span>
                   <ArrowRight className="h-5 w-5" />
-                </div>
+                </a>
               </div>
             </div>
           </ScrollReveal>
@@ -84,10 +84,10 @@ export default function Offerings() {
                 From 20-hour drafts to 2-minute proposals — without hiring a single new writer.
               </p>
               <div className="mt-auto">
-                <div className="flex items-center text-[hsl(var(--neon-green))]">
+                <a href="/aeonrfp" className="flex items-center text-[hsl(var(--neon-green))] hover:underline cursor-pointer">
                   <span className="mr-2 font-medium">Learn more</span>
                   <ArrowRight className="h-5 w-5" />
-                </div>
+                </a>
               </div>
             </div>
           </ScrollReveal>
@@ -124,10 +124,10 @@ export default function Offerings() {
                 Your team shouldn't do what an agent can. Deploy precision AI, made for your operations.
               </p>
               <div className="mt-auto">
-                <div className="flex items-center text-[hsl(var(--neon-purple))]">
+                <a href="/aeonagent" className="flex items-center text-[hsl(var(--neon-purple))] hover:underline cursor-pointer">
                   <span className="mr-2 font-medium">Learn more</span>
                   <ArrowRight className="h-5 w-5" />
-                </div>
+                </a>
               </div>
             </div>
           </ScrollReveal>

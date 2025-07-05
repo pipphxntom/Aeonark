@@ -7,7 +7,7 @@ const navigationItems = [
   { name: "Services", href: "/services" },
   { name: "Pricing", href: "/pricing" },
   { name: "About", href: "/about" },
-  { name: "Collaborations", href: "/collaborations" },
+  { name: "Testimonials", href: "/testimonials" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -28,7 +28,7 @@ export default function Footer() {
               <img 
                 src={aeonarkLogo} 
                 alt="Aeonark Labs" 
-                className="h-8 w-8 object-contain mr-2"
+                className="h-10 w-10 object-contain mr-3"
               />
               <span className="text-xl font-bold text-gradient">Aeonark Labs</span>
             </div>

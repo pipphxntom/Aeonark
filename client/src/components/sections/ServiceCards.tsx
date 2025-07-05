@@ -86,9 +86,9 @@ export default function ServiceCards() {
                     </div>
                   ))}
                 </div>
-                <Link href="/contact">
-                  <Button asChild className={`py-2 px-4 rounded-lg bg-[hsl(var(--${service.color}))]/10 text-[hsl(var(--${service.color}))] hover:bg-[hsl(var(--${service.color}))]/20 transition-all`}>
-                    <a>Get Quote</a>
+                <Link href={service.id === 1 ? "/aeonforge" : service.id === 2 ? "/aeonrfp" : "/aeonagent"}>
+                  <Button className={`py-2 px-4 rounded-lg bg-[hsl(var(--${service.color}))]/10 text-[hsl(var(--${service.color}))] hover:bg-[hsl(var(--${service.color}))]/20 transition-all`}>
+                    Learn More
                   </Button>
                 </Link>
               </div>

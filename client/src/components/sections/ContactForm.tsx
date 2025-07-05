@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, MapPin, Linkedin, Instagram, MessageSquare, Calendar } from "lucide-react";
+import emailjs from '@emailjs/browser';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -13,23 +14,53 @@ export default function ContactForm() {
     message: ""
   });
   
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // In a real implementation, we would send this data to a server
-    // Since we're keeping this static per requirements, we'll just log the data
-    alert("Thanks for your message! We'll be in touch soon.");
-    setFormData({
-      name: "",
-      email: "",
-      subject: "",
-      message: ""
-    });
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    
+    try {
+      // EmailJS configuration from environment variables
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+      
+      // Check if EmailJS is configured
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error('EmailJS configuration is missing. Please contact us directly at aeonark.labs@gmail.com');
+      }
+      
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        to_email: 'aeonark.labs@gmail.com'
+      };
+      
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      
+      setSubmitStatus('success');
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: ""
+      });
+    } catch (error) {
+      console.error('EmailJS Error:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   return (
@@ -108,8 +139,24 @@ export default function ContactForm() {
                     required
                   />
                 </div>
-                <Button type="submit" className="btn-gradient">
-                  Send Message
+                {submitStatus === 'success' && (
+                  <div className="mb-4 p-4 bg-green-100 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                    <p className="text-green-800 dark:text-green-200">
+                      Thank you! Your message has been sent successfully. We'll get back to you soon.
+                    </p>
+                  </div>
+                )}
+                
+                {submitStatus === 'error' && (
+                  <div className="mb-4 p-4 bg-red-100 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                    <p className="text-red-800 dark:text-red-200">
+                      Sorry, there was an error sending your message. Please try again or contact us directly at aeonark.labs@gmail.com.
+                    </p>
+                  </div>
+                )}
+                
+                <Button type="submit" className="btn-gradient" disabled={isSubmitting}>
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
                 </Button>
               </form>
             </div>
@@ -126,7 +173,7 @@ export default function ContactForm() {
                   </div>
                   <div>
                     <h4 className="text-sm font-medium text-foreground/60">Email</h4>
-                    <p>contact@aeonarklabs.com</p>
+                    <p>aeonark.labs@gmail.com</p>
                   </div>
                 </div>
                 <div className="flex items-start">

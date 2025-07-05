@@ -105,6 +105,16 @@ Changelog:
   - Updated key offerings to AeonForge, AeonRFP, and AeonAgent
   - Added detailed feature descriptions for each offering
   - Fixed navbar structure to remove nested anchor tag warnings
+- July 05, 2025. Testimonials and Contact Form Implementation:
+  - Converted Collaborations page to Testimonials page
+  - Added portfolio testimonials for interior designers and architects
+  - Added business testimonials for AeonForge, AeonRFP, and AeonAgent
+  - Integrated company logos and testimonial photos
+  - Added external link to www.setare-rezaei.com testimonial
+  - Implemented EmailJS contact form functionality
+  - Contact form now sends to aeonark.labs@gmail.com
+  - Added form validation and loading states
+  - Updated navigation to use "Testimonials" instead of "Collaborations"
 ```
 
 ## User Preferences

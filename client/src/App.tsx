@@ -8,7 +8,10 @@ import Services from "@/pages/Services";
 import Pricing from "@/pages/Pricing";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
-import Collaborations from "@/pages/Collaborations";
+import Testimonials from "@/pages/Testimonials";
+import AeonForge from "@/pages/AeonForge";
+import AeonRFP from "@/pages/AeonRFP";
+import AeonAgent from "@/pages/AeonAgent";
 import Navbar from "@/components/layouts/Navbar";
 import Footer from "@/components/layouts/Footer";
 
@@ -19,8 +22,11 @@ function Router() {
       <Route path="/services" component={Services} />
       <Route path="/pricing" component={Pricing} />
       <Route path="/about" component={About} />
-      <Route path="/collaborations" component={Collaborations} />
+      <Route path="/testimonials" component={Testimonials} />
       <Route path="/contact" component={Contact} />
+      <Route path="/aeonforge" component={AeonForge} />
+      <Route path="/aeonrfp" component={AeonRFP} />
+      <Route path="/aeonagent" component={AeonAgent} />
       <Route component={NotFound} />
     </Switch>
   );
