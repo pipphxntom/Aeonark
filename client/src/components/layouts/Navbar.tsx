@@ -5,6 +5,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useMobile } from "@/hooks/use-mobile";
+import aeonarkLogo from "@/assets/aeonark-logo.jpg";
 
 const navigationItems = [
   { name: "Home", href: "/" },
@@ -24,9 +25,11 @@ export default function Navbar() {
     <header className="sticky top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/20">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/">
-          <a className="flex items-center">
-            <span className="text-2xl font-bold text-gradient">Aeonark Labs</span>
-          </a>
+          <img 
+            src={aeonarkLogo} 
+            alt="Aeonark Labs" 
+            className="h-10 w-10 object-contain cursor-pointer"
+          />
         </Link>
 
         {/* Mobile menu button */}
@@ -46,14 +49,14 @@ export default function Navbar() {
         <nav className="hidden md:flex md:items-center md:space-x-8">
           {navigationItems.map((item) => (
             <Link key={item.name} href={item.href}>
-              <a className={cn(
-                "relative text-foreground hover:text-[hsl(var(--neon-blue))] transition-colors py-2",
+              <span className={cn(
+                "relative text-foreground hover:text-[hsl(var(--neon-blue))] transition-colors py-2 cursor-pointer",
                 "after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-[hsl(var(--neon-blue))] after:to-[hsl(var(--neon-green))] after:transition-all after:duration-300",
                 "hover:after:w-full",
                 location === item.href && "after:w-full font-medium"
               )}>
                 {item.name}
-              </a>
+              </span>
             </Link>
           ))}
           <Button variant="ghost" onClick={() => window.location.href = '/api/download'}>
@@ -72,15 +75,15 @@ export default function Navbar() {
           <div className="px-4 py-6 space-y-2 flex flex-col">
             {navigationItems.map((item) => (
               <Link key={item.name} href={item.href}>
-                <a 
+                <span 
                   className={cn(
-                    "block py-3 px-4 text-lg rounded-md hover:bg-foreground/10 transition-colors",
+                    "block py-3 px-4 text-lg rounded-md hover:bg-foreground/10 transition-colors cursor-pointer",
                     location === item.href && "font-medium text-[hsl(var(--neon-blue))]"
                   )}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.name}
-                </a>
+                </span>
               </Link>
             ))}
           </div>

@@ -1,5 +1,5 @@
 import ScrollReveal from "@/components/ScrollReveal";
-import { Monitor, Smartphone, Lightbulb } from "lucide-react";
+import { Monitor, FileText, Bot, Check } from "lucide-react";
 import { ArrowRight } from "lucide-react";
 
 export default function Offerings() {
@@ -15,16 +15,34 @@ export default function Offerings() {
         </ScrollReveal>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Full-stack Websites */}
+          {/* AeonForge */}
           <ScrollReveal delay={1}>
             <div className="rounded-xl p-6 bg-card border border-[hsl(var(--neon-blue))]/20 card-hover">
               <div className="w-14 h-14 mb-4 rounded-lg bg-[hsl(var(--neon-blue))]/10 flex items-center justify-center">
                 <Monitor className="h-8 w-8 text-[hsl(var(--neon-blue))]" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Full-stack Websites</h3>
+              <h3 className="text-xl font-semibold mb-3">AeonForge</h3>
               <p className="text-foreground/70 mb-4">
-                Custom-built, responsive websites with powerful backend systems and databases that scale with your business.
+                AeonForge isn't just web development — it's your digital launchpad
               </p>
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center text-sm text-foreground/80">
+                  <Check className="h-4 w-4 text-[hsl(var(--neon-green))] mr-2" />
+                  48-hour personal brand sites
+                </div>
+                <div className="flex items-center text-sm text-foreground/80">
+                  <Check className="h-4 w-4 text-[hsl(var(--neon-green))] mr-2" />
+                  Scalable web apps for service automation
+                </div>
+                <div className="flex items-center text-sm text-foreground/80">
+                  <Check className="h-4 w-4 text-[hsl(var(--neon-green))] mr-2" />
+                  SEO, analytics, and lead-gen integrated by default
+                </div>
+                <div className="flex items-center text-sm text-foreground/80">
+                  <Check className="h-4 w-4 text-[hsl(var(--neon-green))] mr-2" />
+                  Growth-ready: connect with AI agents anytime
+                </div>
+              </div>
               <div className="mt-auto">
                 <div className="flex items-center text-[hsl(var(--neon-blue))]">
                   <span className="mr-2 font-medium">Learn more</span>
@@ -34,15 +52,36 @@ export default function Offerings() {
             </div>
           </ScrollReveal>
           
-          {/* Mobile-Friendly Apps */}
+          {/* AeonRFP */}
           <ScrollReveal delay={2}>
             <div className="rounded-xl p-6 bg-card border border-[hsl(var(--neon-green))]/20 card-hover">
               <div className="w-14 h-14 mb-4 rounded-lg bg-[hsl(var(--neon-green))]/10 flex items-center justify-center">
-                <Smartphone className="h-8 w-8 text-[hsl(var(--neon-green))]" />
+                <FileText className="h-8 w-8 text-[hsl(var(--neon-green))]" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Mobile-Friendly Apps</h3>
+              <h3 className="text-xl font-semibold mb-3">AeonRFP</h3>
               <p className="text-foreground/70 mb-4">
-                Cross-platform mobile applications that deliver native-like experiences while maintaining a single codebase.
+                Automated RFP, Quote & Proposal Generation for Agencies, SaaS. AeonRFP is your unfair advantage in enterprise sales. It scans complex RFP documents, auto-drafts proposal responses, and delivers polished pitch decks — tailored to your services, voice, and clients — in minutes.
+              </p>
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center text-sm text-foreground/80">
+                  <Check className="h-4 w-4 text-[hsl(var(--neon-green))] mr-2" />
+                  Upload any RFP or brief (PDF/DOCX)
+                </div>
+                <div className="flex items-center text-sm text-foreground/80">
+                  <Check className="h-4 w-4 text-[hsl(var(--neon-green))] mr-2" />
+                  Get full proposal drafts, tailored to your business
+                </div>
+                <div className="flex items-center text-sm text-foreground/80">
+                  <Check className="h-4 w-4 text-[hsl(var(--neon-green))] mr-2" />
+                  SmartMatch tech scores opportunities by fit
+                </div>
+                <div className="flex items-center text-sm text-foreground/80">
+                  <Check className="h-4 w-4 text-[hsl(var(--neon-green))] mr-2" />
+                  Works with Slack, Gmail, Google Drive & CRMs
+                </div>
+              </div>
+              <p className="text-sm text-foreground/60 mb-4">
+                From 20-hour drafts to 2-minute proposals — without hiring a single new writer.
               </p>
               <div className="mt-auto">
                 <div className="flex items-center text-[hsl(var(--neon-green))]">
@@ -53,15 +92,36 @@ export default function Offerings() {
             </div>
           </ScrollReveal>
           
-          {/* AI Agents and Automation */}
+          {/* AeonAgent */}
           <ScrollReveal delay={3}>
             <div className="rounded-xl p-6 bg-card border border-[hsl(var(--neon-purple))]/20 card-hover">
               <div className="w-14 h-14 mb-4 rounded-lg bg-[hsl(var(--neon-purple))]/10 flex items-center justify-center">
-                <Lightbulb className="h-8 w-8 text-[hsl(var(--neon-purple))]" />
+                <Bot className="h-8 w-8 text-[hsl(var(--neon-purple))]" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">AI Agents & Automation</h3>
+              <h3 className="text-xl font-semibold mb-3">AeonAgent</h3>
               <p className="text-foreground/70 mb-4">
-                Custom AI-powered agents and automation tools that streamline operations and enhance customer interactions.
+                Custom AI agents for sales, operations, legal, HR, and more. AeonAgent builds your private AI workforce. From triaging support tickets to generating daily reports, from sales outreach to internal task routing — we craft intelligent, role-specific AI agents that integrate directly into your stack.
+              </p>
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center text-sm text-foreground/80">
+                  <Check className="h-4 w-4 text-[hsl(var(--neon-green))] mr-2" />
+                  SalesBots that follow up 24/7
+                </div>
+                <div className="flex items-center text-sm text-foreground/80">
+                  <Check className="h-4 w-4 text-[hsl(var(--neon-green))] mr-2" />
+                  Legal agents that scan contracts or policy updates
+                </div>
+                <div className="flex items-center text-sm text-foreground/80">
+                  <Check className="h-4 w-4 text-[hsl(var(--neon-green))] mr-2" />
+                  Support agents that reduce ticket load by 60%
+                </div>
+                <div className="flex items-center text-sm text-foreground/80">
+                  <Check className="h-4 w-4 text-[hsl(var(--neon-green))] mr-2" />
+                  HR bots that onboard or answer team queries
+                </div>
+              </div>
+              <p className="text-sm text-foreground/60 mb-4">
+                Your team shouldn't do what an agent can. Deploy precision AI, made for your operations.
               </p>
               <div className="mt-auto">
                 <div className="flex items-center text-[hsl(var(--neon-purple))]">

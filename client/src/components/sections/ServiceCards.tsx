@@ -2,50 +2,47 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { 
-  Code, Smartphone, Palette, Bot, MessageSquare, BarChart3 
+  Monitor, FileText, Bot, Check
 } from "lucide-react";
 
 const services = [
   {
     id: 1,
-    title: "Web Development",
-    description: "Custom websites and web applications built with modern frameworks and techniques to deliver exceptional performance.",
-    icon: <Code className="h-6 w-6 text-[hsl(var(--neon-blue))]" />,
+    title: "AeonForge",
+    description: "AeonForge isn't just web development — it's your digital launchpad",
+    features: [
+      "48-hour personal brand sites",
+      "Scalable web apps for service automation",
+      "SEO, analytics, and lead-gen integrated by default",
+      "Growth-ready: connect with AI agents anytime"
+    ],
+    icon: <Monitor className="h-6 w-6 text-[hsl(var(--neon-blue))]" />,
     color: "neon-blue"
   },
   {
     id: 2,
-    title: "App Development",
-    description: "Beautiful, functional mobile applications for iOS and Android that engage users and drive results for your business.",
-    icon: <Smartphone className="h-6 w-6 text-[hsl(var(--neon-green))]" />,
+    title: "AeonRFP",
+    description: "Automated RFP, Quote & Proposal Generation for Agencies, SaaS. AeonRFP is your unfair advantage in enterprise sales. It scans complex RFP documents, auto-drafts proposal responses, and delivers polished pitch decks — tailored to your services, voice, and clients — in minutes.",
+    features: [
+      "Upload any RFP or brief (PDF/DOCX)",
+      "Get full proposal drafts, tailored to your business",
+      "SmartMatch tech scores opportunities by fit",
+      "Works with Slack, Gmail, Google Drive & CRMs"
+    ],
+    icon: <FileText className="h-6 w-6 text-[hsl(var(--neon-green))]" />,
     color: "neon-green"
   },
   {
     id: 3,
-    title: "UI/UX Design",
-    description: "User-focused design that creates intuitive, engaging experiences that keep users coming back.",
-    icon: <Palette className="h-6 w-6 text-[hsl(var(--neon-purple))]" />,
-    color: "neon-purple"
-  },
-  {
-    id: 4,
-    title: "AI Agent Creation",
-    description: "Custom chatbots and automated systems that streamline workflows and enhance customer service capabilities.",
-    icon: <Bot className="h-6 w-6 text-[hsl(var(--neon-blue))]" />,
-    color: "neon-blue"
-  },
-  {
-    id: 5,
-    title: "Consultation Services",
-    description: "Expert guidance on digital strategy, product development, and technical implementation for your business.",
-    icon: <MessageSquare className="h-6 w-6 text-[hsl(var(--neon-green))]" />,
-    color: "neon-green"
-  },
-  {
-    id: 6,
-    title: "Data Analytics",
-    description: "Comprehensive data collection, analysis, and visualization tools to help you make informed business decisions.",
-    icon: <BarChart3 className="h-6 w-6 text-[hsl(var(--neon-purple))]" />,
+    title: "AeonAgent",
+    description: "Custom AI agents for sales, operations, legal, HR, and more. AeonAgent builds your private AI workforce. From triaging support tickets to generating daily reports, from sales outreach to internal task routing — we craft intelligent, role-specific AI agents that integrate directly into your stack.",
+    features: [
+      "SalesBots that follow up 24/7",
+      "Legal agents that scan contracts or policy updates",
+      "Support agents that reduce ticket load by 60%",
+      "HR bots that onboard or answer team queries"
+    ],
+    icon: <Bot className="h-6 w-6 text-[hsl(var(--neon-purple))]" />,
     color: "neon-purple"
   }
 ];
@@ -78,9 +75,17 @@ export default function ServiceCards() {
                   </div>
                   <h3 className="text-xl font-semibold">{service.title}</h3>
                 </div>
-                <p className="text-foreground/70 text-sm mb-5">
+                <p className="text-foreground/70 text-sm mb-4">
                   {service.description}
                 </p>
+                <div className="space-y-2 mb-5">
+                  {service.features.map((feature, idx) => (
+                    <div key={idx} className="flex items-center text-sm text-foreground/80">
+                      <Check className="h-4 w-4 text-[hsl(var(--neon-green))] mr-2" />
+                      {feature}
+                    </div>
+                  ))}
+                </div>
                 <Link href="/contact">
                   <Button asChild className={`py-2 px-4 rounded-lg bg-[hsl(var(--${service.color}))]/10 text-[hsl(var(--${service.color}))] hover:bg-[hsl(var(--${service.color}))]/20 transition-all`}>
                     <a>Get Quote</a>

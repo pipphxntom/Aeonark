@@ -99,6 +99,12 @@ This is a modern, responsive multi-page website for Aeonark Labs, an Indian digi
 ```
 Changelog:
 - July 05, 2025. Initial setup
+- July 05, 2025. Migration from Replit Agent to Replit environment completed
+- July 05, 2025. Updated branding with new logo and key offerings:
+  - Added Aeonark Labs logo to replace text branding
+  - Updated key offerings to AeonForge, AeonRFP, and AeonAgent
+  - Added detailed feature descriptions for each offering
+  - Fixed navbar structure to remove nested anchor tag warnings
 ```
 
 ## User Preferences

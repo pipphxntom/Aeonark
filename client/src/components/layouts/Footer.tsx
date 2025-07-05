@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { Linkedin, Instagram, MessageSquare } from "lucide-react";
+import aeonarkLogo from "@/assets/aeonark-logo.jpg";
 
 const navigationItems = [
   { name: "Home", href: "/" },
@@ -23,7 +24,14 @@ export default function Footer() {
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-6 md:mb-0">
-            <span className="text-2xl font-bold text-gradient">Aeonark Labs</span>
+            <div className="flex items-center mb-2">
+              <img 
+                src={aeonarkLogo} 
+                alt="Aeonark Labs" 
+                className="h-8 w-8 object-contain mr-2"
+              />
+              <span className="text-xl font-bold text-gradient">Aeonark Labs</span>
+            </div>
             <p className="text-foreground/60 mt-2">Building the digital future.</p>
             
             {/* Social Links */}
