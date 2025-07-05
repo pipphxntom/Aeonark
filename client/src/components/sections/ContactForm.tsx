@@ -29,8 +29,8 @@ export default function ContactForm() {
     
     try {
       // EmailJS configuration
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_aeonark';
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_contact';
+      const serviceId = 'service_wxxvfxn';
+      const templateId = 'template_d40xh5o';
       const publicKey = '7X8SqNGZ-6XADA-_i'; // Your provided public key
       
       // Initialize EmailJS with your public key
@@ -206,7 +206,7 @@ export default function ContactForm() {
                   <MessageSquare className="h-5 w-5 text-[hsl(var(--neon-purple))] mr-3" />
                   <span>WhatsApp</span>
                 </a>
-                <a href="https://calendly.com/aeonark-labs" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-lg bg-card hover:bg-foreground/5 transition-all">
+                <a href="https://calendly.com/aeonark-lab/30min" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-lg bg-card hover:bg-foreground/5 transition-all">
                   <Calendar className="h-5 w-5 text-[hsl(var(--neon-blue))] mr-3" />
                   <span>Book a Call</span>
                 </a>

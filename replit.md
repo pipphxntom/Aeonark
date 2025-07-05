@@ -115,6 +115,15 @@ Changelog:
   - Contact form now sends to aeonark.labs@gmail.com
   - Added form validation and loading states
   - Updated navigation to use "Testimonials" instead of "Collaborations"
+- July 05, 2025. Space Theme and Animation Updates:
+  - Removed rotating cube animation from hero section
+  - Added twinkling stars background with meteor animations
+  - Updated hero heading to "We Engineer Digital Power — Websites, Apps & AI Agents"
+  - Updated subheading to "Launch faster. Convert smarter. Dominate with less."
+  - Made background darker like space (3% lightness for dark theme)
+  - Configured EmailJS with real credentials (service_wxxvfxn, template_d40xh5o)
+  - Updated Calendly integration to https://calendly.com/aeonark-lab/30min
+  - Hero section now uses centered layout without rotating cube
 ```
 
 ## User Preferences
