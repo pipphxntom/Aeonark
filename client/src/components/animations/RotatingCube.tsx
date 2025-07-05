@@ -210,7 +210,7 @@ export default function RotatingCube({
     container.style.left = '0';
     container.style.width = '100%';
     container.style.height = '100%';
-    container.style.background = '#0C0C0E';
+    container.style.background = 'transparent';
     container.style.display = 'flex';
     container.style.alignItems = 'center';
     container.style.justifyContent = 'center';
@@ -261,7 +261,7 @@ export default function RotatingCube({
     <div 
       ref={mountRef} 
       className={`relative ${className}`}
-      style={{ width, height, background: '#0C0C0E' }}
+      style={{ width, height, background: 'transparent' }}
     />
   );
 }

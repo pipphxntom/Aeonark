@@ -28,15 +28,13 @@ export default function ContactForm() {
     setSubmitStatus('idle');
     
     try {
-      // EmailJS configuration - will be provided by user
+      // EmailJS configuration
       const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_aeonark';
       const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_contact';
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
+      const publicKey = '7X8SqNGZ-6XADA-_i'; // Your provided public key
       
-      // Check if EmailJS is configured with real values
-      if (publicKey === 'YOUR_PUBLIC_KEY' || !serviceId || !templateId) {
-        throw new Error('EmailJS configuration is missing. Please contact us directly at aeonark.labs@gmail.com');
-      }
+      // Initialize EmailJS with your public key
+      emailjs.init(publicKey);
       
       const templateParams = {
         from_name: formData.name,
@@ -46,7 +44,11 @@ export default function ContactForm() {
         to_email: 'aeonark.labs@gmail.com'
       };
       
-      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      console.log('Sending email with params:', templateParams);
+      
+      // Send email using EmailJS
+      const result = await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      console.log('EmailJS result:', result);
       
       setSubmitStatus('success');
       setFormData({
@@ -204,9 +206,9 @@ export default function ContactForm() {
                   <MessageSquare className="h-5 w-5 text-[hsl(var(--neon-purple))] mr-3" />
                   <span>WhatsApp</span>
                 </a>
-                <a href="#" className="flex items-center p-3 rounded-lg bg-card hover:bg-foreground/5 transition-all">
+                <a href="https://calendly.com/aeonark-labs" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-lg bg-card hover:bg-foreground/5 transition-all">
                   <Calendar className="h-5 w-5 text-[hsl(var(--neon-blue))] mr-3" />
-                  <span>Calendly</span>
+                  <span>Book a Call</span>
                 </a>
               </div>
             </div>

@@ -3,10 +3,12 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { Shield, Zap, ThumbsUp, Clock } from "lucide-react";
 import RotatingCube from "@/components/animations/RotatingCube";
+import TwinklingStars from "@/components/animations/TwinklingStars";
 
 export default function Hero() {
   return (
     <section className="pt-24 pb-16 md:pt-32 md:pb-20 relative overflow-hidden">
+      <TwinklingStars />
       <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--neon-blue))]/5 to-transparent"></div>
       
       <div className="container mx-auto px-4 relative z-10">
