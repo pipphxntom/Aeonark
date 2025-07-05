@@ -59,9 +59,7 @@ export default function Navbar() {
               </span>
             </Link>
           ))}
-          <Button variant="ghost" onClick={() => window.location.href = '/api/download'}>
-            Download Project
-          </Button>
+
           <ThemeToggle />
         </nav>
       </div>

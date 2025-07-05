@@ -1,9 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import archiver from 'archiver';
-import path from 'path';
-import fs from 'fs';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API routes
@@ -32,33 +29,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
-  app.get('/api/download', async (req, res) => {
-    const projectDir = process.env.PROJECT_FILES_DIR;
-    if (!projectDir) {
-      return res.status(500).json({ error: 'PROJECT_FILES_DIR environment variable not set' });
-    }
 
-    const archive = archiver('zip', {
-      zlib: { level: 9 } // Sets the compression level
-    });
-
-    res.setHeader('Content-Type', 'application/zip');
-    res.setHeader('Content-Disposition', 'attachment; filename=project.zip');
-
-    archive.on('error', (err) => {
-      console.error('Archive error:', err);
-      res.status(500).send({ error: 'Failed to create archive' });
-    });
-
-    archive.pipe(res);
-
-    const files = fs.readdirSync(projectDir);
-    files.forEach(file => {
-      archive.file(path.join(projectDir, file), { name: file });
-    });
-
-    await archive.finalize();
-  });
 
 
   const httpServer = createServer(app);

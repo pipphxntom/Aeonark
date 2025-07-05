@@ -28,13 +28,13 @@ export default function ContactForm() {
     setSubmitStatus('idle');
     
     try {
-      // EmailJS configuration from environment variables
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+      // EmailJS configuration - will be provided by user
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_aeonark';
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_contact';
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
       
-      // Check if EmailJS is configured
-      if (!serviceId || !templateId || !publicKey) {
+      // Check if EmailJS is configured with real values
+      if (publicKey === 'YOUR_PUBLIC_KEY' || !serviceId || !templateId) {
         throw new Error('EmailJS configuration is missing. Please contact us directly at aeonark.labs@gmail.com');
       }
       
