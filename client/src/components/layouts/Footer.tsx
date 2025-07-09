@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Linkedin, Instagram, MessageSquare } from "lucide-react";
-import aeonarkLogo from "@/assets/aeonark-logo.jpg";
+import aeonarkLogo from "@/assets/aeonark-logo.png";
 
 const navigationItems = [
   { name: "Home", href: "/" },
@@ -54,9 +54,9 @@ export default function Footer() {
             <nav className="flex flex-wrap justify-center md:justify-end gap-6 mb-4">
               {navigationItems.map((item) => (
                 <Link key={item.name} href={item.href}>
-                  <a className="text-foreground/70 hover:text-[hsl(var(--neon-blue))] transition-colors">
+                  <span className="text-foreground/70 hover:text-[hsl(var(--neon-blue))] transition-colors cursor-pointer">
                     {item.name}
-                  </a>
+                  </span>
                 </Link>
               ))}
             </nav>

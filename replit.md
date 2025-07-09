@@ -124,6 +124,15 @@ Changelog:
   - Configured EmailJS with real credentials (service_wxxvfxn, template_d40xh5o)
   - Updated Calendly integration to https://calendly.com/aeonark-lab/30min
   - Hero section now uses centered layout without rotating cube
+- July 09, 2025. Logo and Contact Form Updates:
+  - Replaced old logo with new knight chess piece logo in black and white
+  - Updated logo references in navbar and footer components
+  - Changed contact email from aeonark.labs@gmail.com to aeonark.lab@gmail.com
+  - Migrated contact form from EmailJS to Resend for better reliability
+  - Added server-side contact form handling with Resend integration
+  - Fixed pricing section button visibility with improved borders and colors
+  - Enhanced "Choose Plan" button visibility for all pricing tiers
+  - Fixed DOM nesting warning in Footer component by removing nested anchor tags
 ```
 
 ## User Preferences

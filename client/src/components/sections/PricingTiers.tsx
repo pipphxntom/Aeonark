@@ -170,8 +170,8 @@ export default function PricingTiers() {
                 className={cn(
                   "px-8 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105",
                   selectedService === service
-                    ? `bg-[hsl(var(--${serviceData[service].color}))] text-background shadow-lg shadow-[hsl(var(--${serviceData[service].color}))]/30`
-                    : "bg-background text-foreground border border-border hover:bg-foreground/5"
+                    ? `bg-[hsl(var(--${serviceData[service].color}))] text-background shadow-lg shadow-[hsl(var(--${serviceData[service].color}))]/30 border-2 border-[hsl(var(--${serviceData[service].color}))]`
+                    : "bg-background text-foreground border-2 border-border hover:bg-foreground/5 hover:border-[hsl(var(--neon-blue))]"
                 )}
               >
                 {service}
@@ -225,10 +225,10 @@ export default function PricingTiers() {
                   <div className="mt-auto">
                     <Link href="/contact">
                       <Button className={cn(
-                        "w-full py-3 rounded-lg transition-all",
+                        "w-full py-3 rounded-lg transition-all font-medium",
                         tier.popular 
-                          ? `bg-[hsl(var(--${currentService.color}))] text-background hover:shadow-lg hover:shadow-[hsl(var(--${currentService.color}))]/20`
-                          : `text-[hsl(var(--${currentService.color}))] bg-[hsl(var(--${currentService.color}))]/10 hover:bg-[hsl(var(--${currentService.color}))]/20`
+                          ? `bg-[hsl(var(--${currentService.color}))] text-background hover:shadow-lg hover:shadow-[hsl(var(--${currentService.color}))]/20 border-2 border-[hsl(var(--${currentService.color}))]`
+                          : `text-[hsl(var(--${currentService.color}))] bg-[hsl(var(--${currentService.color}))]/10 hover:bg-[hsl(var(--${currentService.color}))]/20 border-2 border-[hsl(var(--${currentService.color}))]`
                       )}>
                         Choose Plan
                       </Button>

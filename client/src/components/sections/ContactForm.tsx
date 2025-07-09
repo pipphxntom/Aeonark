@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, MapPin, Linkedin, Instagram, MessageSquare, Calendar } from "lucide-react";
-import emailjs from '@emailjs/browser';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -28,37 +27,34 @@ export default function ContactForm() {
     setSubmitStatus('idle');
     
     try {
-      // EmailJS configuration
-      const serviceId = 'service_wxxvfxn';
-      const templateId = 'template_d40xh5o';
-      const publicKey = '7X8SqNGZ-6XADA-_i'; // Your provided public key
-      
-      // Initialize EmailJS with your public key
-      emailjs.init(publicKey);
-      
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        subject: formData.subject,
-        message: formData.message,
-        to_email: 'aeonark.lab@gmail.com'
-      };
-      
-      console.log('Sending email with params:', templateParams);
-      
-      // Send email using EmailJS
-      const result = await emailjs.send(serviceId, templateId, templateParams, publicKey);
-      console.log('EmailJS result:', result);
-      
-      setSubmitStatus('success');
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: ""
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+        }),
       });
+      
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
+        setSubmitStatus('success');
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: ""
+        });
+      } else {
+        setSubmitStatus('error');
+      }
     } catch (error) {
-      console.error('EmailJS Error:', error);
+      console.error('Contact form error:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
