@@ -60,7 +60,32 @@ export default function Navbar() {
             </Link>
           ))}
 
-          <ThemeToggle />
+          <div className="flex items-center space-x-4">
+            <Link href="/new-auth">
+              <Button 
+                variant="outline" 
+                size="sm"
+                className={cn(
+                  "border-[hsl(var(--neon-blue))] text-[hsl(var(--neon-blue))] hover:bg-[hsl(var(--neon-blue))] hover:text-black transition-all duration-300",
+                  "hover:shadow-lg hover:shadow-[hsl(var(--neon-blue))]/50 hover:scale-105"
+                )}
+              >
+                Login
+              </Button>
+            </Link>
+            <Link href="/new-auth">
+              <Button 
+                size="sm"
+                className={cn(
+                  "bg-gradient-to-r from-[hsl(var(--neon-green))] to-[hsl(var(--neon-blue))] text-black hover:from-[hsl(var(--neon-blue))] hover:to-[hsl(var(--neon-green))] transition-all duration-300",
+                  "hover:shadow-lg hover:shadow-[hsl(var(--neon-green))]/50 hover:scale-105"
+                )}
+              >
+                Sign Up
+              </Button>
+            </Link>
+            <ThemeToggle />
+          </div>
         </nav>
       </div>
 
@@ -84,6 +109,33 @@ export default function Navbar() {
                 </span>
               </Link>
             ))}
+            
+            {/* Mobile Auth Buttons */}
+            <div className="pt-4 border-t border-foreground/10 space-y-3">
+              <Link href="/new-auth">
+                <Button 
+                  variant="outline" 
+                  className={cn(
+                    "w-full border-[hsl(var(--neon-blue))] text-[hsl(var(--neon-blue))] hover:bg-[hsl(var(--neon-blue))] hover:text-black transition-all duration-300",
+                    "hover:shadow-lg hover:shadow-[hsl(var(--neon-blue))]/50"
+                  )}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Login
+                </Button>
+              </Link>
+              <Link href="/new-auth">
+                <Button 
+                  className={cn(
+                    "w-full bg-gradient-to-r from-[hsl(var(--neon-green))] to-[hsl(var(--neon-blue))] text-black hover:from-[hsl(var(--neon-blue))] hover:to-[hsl(var(--neon-green))] transition-all duration-300",
+                    "hover:shadow-lg hover:shadow-[hsl(var(--neon-green))]/50"
+                  )}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sign Up
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       )}

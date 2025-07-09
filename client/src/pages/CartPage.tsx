@@ -36,9 +36,9 @@ interface AddOn {
 }
 
 const PLAN_PRICES = {
-  starter: 999,
-  growth: 2999,
-  scale: 4999,
+  starter: 4999,
+  growth: 14999,
+  scale: 49999,
 };
 
 const AVAILABLE_ADDONS: AddOn[] = [
@@ -46,21 +46,21 @@ const AVAILABLE_ADDONS: AddOn[] = [
     id: 'ai-chatbot',
     name: 'AI Chatbot Integration',
     description: 'Smart AI assistant for customer support',
-    price: 299,
+    price: 2999,
     selected: false,
   },
   {
     id: 'mobile-app',
     name: 'Mobile App Wrapper',
     description: 'iOS and Android app versions',
-    price: 499,
+    price: 5000,
     selected: false,
   },
   {
     id: 'maintenance',
     name: 'Premium Maintenance',
     description: 'Monthly updates and security patches',
-    price: 199,
+    price: 999,
     selected: false,
   },
 ];
@@ -176,7 +176,7 @@ export default function CartPage() {
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
               <img 
-                src="/Aeonark/aeonark-logo.png" 
+                src="/Aeonark/src/assets/aeonark-logo.png" 
                 alt="Aeonark Labs" 
                 className="h-10 w-10 object-contain"
               />
