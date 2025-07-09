@@ -120,11 +120,19 @@ export default function NewAuthPage() {
       setStep('otp');
       otpForm.setValue('email', email);
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to send signup code. Please try again.",
-        variant: "destructive",
-      });
+      if (error.message.includes('email send rate limit') || error.message.includes('60 seconds')) {
+        toast({
+          title: "Rate Limited",
+          description: "Please wait 60 seconds before requesting another code.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to send signup code. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -139,11 +147,19 @@ export default function NewAuthPage() {
       setStep('otp');
       otpForm.setValue('email', email);
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to send login code. Please try again.",
-        variant: "destructive",
-      });
+      if (error.message.includes('email send rate limit') || error.message.includes('60 seconds')) {
+        toast({
+          title: "Rate Limited",
+          description: "Please wait 60 seconds before requesting another code.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to send login code. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -184,10 +200,14 @@ export default function NewAuthPage() {
   };
 
   const resendOtp = async () => {
-    if (authMode === 'signup') {
-      await sendSignupOtp(email);
-    } else {
-      await sendLoginOtp(email);
+    try {
+      if (authMode === 'signup') {
+        await sendSignupOtp(email);
+      } else {
+        await sendLoginOtp(email);
+      }
+    } catch (error: any) {
+      // Error handling is already done in sendSignupOtp/sendLoginOtp
     }
   };
 
@@ -322,8 +342,9 @@ export default function NewAuthPage() {
                     variant="ghost"
                     onClick={resendOtp}
                     className="text-gray-400 hover:text-white text-sm"
+                    disabled={checkEmailMutation.isPending}
                   >
-                    Didn't receive the code? Resend
+                    {checkEmailMutation.isPending ? "Sending..." : "Didn't receive the code? Resend"}
                   </Button>
                 </div>
               </div>

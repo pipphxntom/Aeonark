@@ -93,26 +93,60 @@ export const authService = {
     };
   },
 
-  // Get stored session
+  // Get stored session with fallback support for mobile
   getStoredSession(): AuthSession | null {
-    const stored = localStorage.getItem('auth_session');
+    let stored = localStorage.getItem('auth_session');
+    
+    // Fallback to sessionStorage for mobile compatibility
+    if (!stored) {
+      stored = sessionStorage.getItem('auth_session');
+    }
+    
     if (!stored) return null;
     
     try {
-      return JSON.parse(stored);
+      const session = JSON.parse(stored);
+      // Check if session is still valid (not expired)
+      const now = Date.now();
+      if (session.expiresAt && now > session.expiresAt) {
+        this.clearSession();
+        return null;
+      }
+      return session;
     } catch {
       return null;
     }
   },
 
-  // Store session
+  // Store session with enhanced mobile compatibility
   storeSession(session: AuthSession): void {
-    localStorage.setItem('auth_session', JSON.stringify(session));
+    const sessionWithExpiry = {
+      ...session,
+      expiresAt: Date.now() + (7 * 24 * 60 * 60 * 1000), // 7 days
+    };
+    
+    // Store in both localStorage and sessionStorage for better mobile compatibility
+    try {
+      localStorage.setItem('auth_session', JSON.stringify(sessionWithExpiry));
+      sessionStorage.setItem('auth_session', JSON.stringify(sessionWithExpiry));
+      // Also store token separately for legacy compatibility
+      localStorage.setItem('authToken', session.token);
+      sessionStorage.setItem('authToken', session.token);
+    } catch (error) {
+      console.error('Failed to store session data:', error);
+    }
   },
 
-  // Clear session
+  // Clear session from all storage locations
   clearSession(): void {
-    localStorage.removeItem('auth_session');
+    try {
+      localStorage.removeItem('auth_session');
+      sessionStorage.removeItem('auth_session');
+      localStorage.removeItem('authToken');
+      sessionStorage.removeItem('authToken');
+    } catch (error) {
+      console.error('Failed to clear session data:', error);
+    }
   },
 
   // Check if user is authenticated

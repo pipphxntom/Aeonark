@@ -97,6 +97,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       if (error) {
         console.error("Supabase signup error:", error);
+        // Handle rate limiting more gracefully
+        if (error.message.includes('email send rate limit')) {
+          return res.status(429).json({ 
+            error: "Please wait 60 seconds before requesting another code.",
+            retryAfter: 60
+          });
+        }
         return res.status(400).json({ error: error.message });
       }
 
@@ -136,6 +143,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       if (error) {
         console.error("Supabase login error:", error);
+        // Handle rate limiting more gracefully
+        if (error.message.includes('email send rate limit')) {
+          return res.status(429).json({ 
+            error: "Please wait 60 seconds before requesting another code.",
+            retryAfter: 60
+          });
+        }
         return res.status(400).json({ error: error.message });
       }
 
