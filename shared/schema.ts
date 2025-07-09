@@ -1,11 +1,11 @@
-import { pgTable, text, serial, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, jsonb, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
 
-// Users table for authentication and profile
+// Users table for authentication and profile - using UUID for Supabase compatibility
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   email: text("email").notNull().unique(),
   fullName: text("full_name"),
   company: text("company"),
@@ -26,10 +26,10 @@ export const otpCodes = pgTable("otp_codes", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-// Cart items table
+// Cart items table - using UUID for user reference
 export const cartItems = pgTable("cart_items", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").references(() => users.id).notNull(),
+  userId: uuid("user_id").references(() => users.id).notNull(),
   planType: text("plan_type").notNull(), // "starter", "growth", "scale"
   planName: text("plan_name").notNull(), // "Starter Site", "Growth Bundle", "Scale Forge"
   addOns: jsonb("add_ons").default([]), // Array of add-on objects
@@ -68,6 +68,19 @@ export const insertCartItemSchema = createInsertSchema(cartItems).pick({
   addOns: true,
 });
 
+// Enhanced auth schemas for Supabase
+export const emailCheckSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+});
+
+export const signupSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+});
+
+export const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+});
+
 export const onboardingSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
   company: z.string().optional(),
@@ -93,3 +106,6 @@ export type CartItem = typeof cartItems.$inferSelect;
 export type OnboardingData = z.infer<typeof onboardingSchema>;
 export type AuthData = z.infer<typeof authSchema>;
 export type OtpVerificationData = z.infer<typeof otpVerificationSchema>;
+export type EmailCheckData = z.infer<typeof emailCheckSchema>;
+export type SignupData = z.infer<typeof signupSchema>;
+export type LoginData = z.infer<typeof loginSchema>;

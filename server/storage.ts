@@ -4,10 +4,10 @@ import { eq, and, gt, sql } from "drizzle-orm";
 
 export interface IStorage {
   // User management
-  getUser(id: number): Promise<User | undefined>;
+  getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(insertUser: InsertUser): Promise<User>;
-  updateUser(id: number, updates: Partial<User>): Promise<User>;
+  updateUser(id: string, updates: Partial<User>): Promise<User>;
   
   // OTP management
   createOtp(insertOtp: InsertOtp): Promise<OtpCode>;
@@ -17,7 +17,7 @@ export interface IStorage {
   cleanupExpiredOtps(): Promise<void>;
   
   // Cart management
-  getCartByUserId(userId: number): Promise<CartItem | undefined>;
+  getCartByUserId(userId: string): Promise<CartItem | undefined>;
   createCartItem(insertCartItem: InsertCartItem): Promise<CartItem>;
   updateCartItem(id: number, updates: Partial<CartItem>): Promise<CartItem>;
   deleteCartItem(id: number): Promise<void>;
@@ -25,7 +25,7 @@ export interface IStorage {
 
 export class DatabaseStorage implements IStorage {
   // User management
-  async getUser(id: number): Promise<User | undefined> {
+  async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;
   }
@@ -47,7 +47,7 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUser(id: number, updates: Partial<User>): Promise<User> {
+  async updateUser(id: string, updates: Partial<User>): Promise<User> {
     const [user] = await db
       .update(users)
       .set({
@@ -119,7 +119,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Cart management
-  async getCartByUserId(userId: number): Promise<CartItem | undefined> {
+  async getCartByUserId(userId: string): Promise<CartItem | undefined> {
     const [cartItem] = await db
       .select()
       .from(cartItems)

@@ -12,9 +12,9 @@ import Testimonials from "@/pages/Testimonials";
 import AeonForge from "@/pages/AeonForge";
 import AeonRFP from "@/pages/AeonRFP";
 import AeonAgent from "@/pages/AeonAgent";
-import AuthPage from "@/pages/AuthPage";
-import OnboardingPage from "@/pages/OnboardingPage";
-import CartPage from "@/pages/CartPage";
+import AuthPage from "@/pages/NewAuthPage";
+import OnboardingPage from "@/pages/NewOnboardingPage";
+import CartPage from "@/pages/NewCartPage";
 import Navbar from "@/components/layouts/Navbar";
 import Footer from "@/components/layouts/Footer";
 

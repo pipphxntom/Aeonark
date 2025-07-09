@@ -1,12 +1,19 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { authSchema, otpVerificationSchema, onboardingSchema } from "@shared/schema";
+import { authSchema, otpVerificationSchema, onboardingSchema, emailCheckSchema, signupSchema, loginSchema } from "@shared/schema";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
 import { Resend } from "resend";
+import { createClient } from '@supabase/supabase-js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Initialize Supabase client
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_ANON_KEY!
+);
 
 // JWT secret - in production, use a proper secret from environment
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
@@ -40,98 +47,146 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.status(200).json({ status: 'ok', message: 'Aeonark Labs API is up and running!' });
   });
 
-  // Authentication endpoints
-  app.post('/api/auth/send-otp', async (req, res) => {
+  // Enhanced authentication endpoints
+  
+  // Check if email exists (determines signup vs login flow)
+  app.post('/api/auth/check-email', async (req, res) => {
     try {
-      const { email } = authSchema.parse(req.body);
+      const { email } = emailCheckSchema.parse(req.body);
       
-      // Generate OTP
-      const otpCode = generateOTP();
-      const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
-      // Store OTP in database
-      await storage.createOtp({
-        email,
-        code: otpCode,
-        expiresAt,
+      // Check if user exists in our database
+      const existingUser = await storage.getUserByEmail(email);
+      
+      res.json({
+        success: true,
+        exists: !!existingUser,
+        isOnboarded: existingUser?.isOnboarded || false,
       });
-
-      // Send OTP email
-      const emailData = await resend.emails.send({
-        from: "Aeonark Labs <onboarding@resend.dev>",
-        to: email,
-        subject: "Your Aeonark Labs Login Code",
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #333; margin: 0;">Aeonark Labs</h1>
-              <p style="color: #666; margin: 5px 0;">Your login code is ready</p>
-            </div>
-            
-            <div style="background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); padding: 30px; border-radius: 12px; text-align: center; margin: 20px 0;">
-              <p style="color: #fff; font-size: 18px; margin: 0 0 15px 0;">Enter this code to continue:</p>
-              <div style="background: #000; padding: 20px; border-radius: 8px; border: 1px solid #00ff88;">
-                <span style="font-size: 32px; font-weight: bold; color: #00ff88; letter-spacing: 4px;">${otpCode}</span>
-              </div>
-            </div>
-            
-            <div style="color: #666; font-size: 14px; text-align: center; margin-top: 20px;">
-              <p>This code will expire in 10 minutes.</p>
-              <p>If you didn't request this code, please ignore this email.</p>
-            </div>
-          </div>
-        `,
-        text: `Your Aeonark Labs login code is: ${otpCode}
-        
-This code will expire in 10 minutes.
-If you didn't request this code, please ignore this email.`,
-      });
-
-      console.log("OTP email sent successfully:", emailData);
-      res.json({ success: true, message: "OTP sent successfully" });
     } catch (error) {
-      console.error("Error sending OTP:", error);
+      console.error("Error checking email:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ error: "Invalid email address" });
       }
-      res.status(500).json({ error: "Failed to send OTP" });
+      res.status(500).json({ error: "Failed to check email" });
     }
   });
 
+  // Signup endpoint - sends OTP for first-time users
+  app.post('/api/auth/signup', async (req, res) => {
+    try {
+      const { email } = signupSchema.parse(req.body);
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser) {
+        return res.status(400).json({ error: "User already exists. Please use login instead." });
+      }
+
+      // Use Supabase to send OTP for signup
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          shouldCreateUser: true,
+          data: {
+            email: email,
+          }
+        }
+      });
+
+      if (error) {
+        console.error("Supabase signup error:", error);
+        return res.status(400).json({ error: error.message });
+      }
+
+      console.log("Supabase signup OTP sent successfully:", data);
+      res.json({ 
+        success: true, 
+        message: "Signup OTP sent successfully",
+        mode: "signup"
+      });
+    } catch (error) {
+      console.error("Error in signup:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid email address" });
+      }
+      res.status(500).json({ error: "Failed to send signup OTP" });
+    }
+  });
+
+  // Login endpoint - sends OTP for existing users
+  app.post('/api/auth/login', async (req, res) => {
+    try {
+      const { email } = loginSchema.parse(req.body);
+      
+      // Check if user exists
+      const existingUser = await storage.getUserByEmail(email);
+      if (!existingUser) {
+        return res.status(400).json({ error: "User not found. Please sign up first." });
+      }
+
+      // Use Supabase to send OTP for login
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          shouldCreateUser: false,
+        }
+      });
+
+      if (error) {
+        console.error("Supabase login error:", error);
+        return res.status(400).json({ error: error.message });
+      }
+
+      console.log("Supabase login OTP sent successfully:", data);
+      res.json({ 
+        success: true, 
+        message: "Login OTP sent successfully",
+        mode: "login",
+        isOnboarded: existingUser.isOnboarded
+      });
+    } catch (error) {
+      console.error("Error in login:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid email address" });
+      }
+      res.status(500).json({ error: "Failed to send login OTP" });
+    }
+  });
+
+  // Enhanced OTP verification with Supabase
   app.post('/api/auth/verify-otp', async (req, res) => {
     try {
       const { email, code } = otpVerificationSchema.parse(req.body);
       
-      // Get OTP from database
-      const otp = await storage.getValidOtp(email, code);
-      
-      if (!otp) {
-        // Increment attempts for security
-        await storage.incrementOtpAttempts(email, code);
+      // Verify OTP with Supabase
+      const { data, error } = await supabase.auth.verifyOtp({
+        email: email,
+        token: code,
+        type: 'email'
+      });
+
+      if (error) {
+        console.error("Supabase OTP verification error:", error);
+        return res.status(400).json({ error: error.message });
+      }
+
+      if (!data.user) {
         return res.status(400).json({ error: "Invalid or expired OTP" });
       }
 
-      // Check if too many attempts
-      if (otp.attempts >= 5) {
-        await storage.deleteOtp(email, code);
-        return res.status(429).json({ error: "Too many attempts. Please request a new OTP." });
-      }
-
-      // Delete the used OTP
-      await storage.deleteOtp(email, code);
-
-      // Check if user exists
+      // Check if user exists in our database
       let user = await storage.getUserByEmail(email);
       
       if (!user) {
-        // Create new user
+        // Create new user in our database with Supabase user ID
         user = await storage.createUser({
-          email,
+          id: data.user.id,
+          email: email,
           isOnboarded: false,
         });
       }
 
-      // Generate JWT token
+      // Generate JWT token for our app
       const token = jwt.sign(
         { userId: user.id, email: user.email },
         JWT_SECRET,
@@ -147,6 +202,7 @@ If you didn't request this code, please ignore this email.`,
           fullName: user.fullName,
           isOnboarded: user.isOnboarded,
         },
+        supabaseSession: data.session,
       });
     } catch (error) {
       console.error("Error verifying OTP:", error);
