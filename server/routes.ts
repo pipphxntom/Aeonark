@@ -91,9 +91,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Store OTP in database
       await storage.storeOtp(email, otp, otpExpiry);
 
-      // Send OTP via Resend
+      // Send OTP via Resend with onboarding@resend.dev (verified domain)
       const { data, error } = await resend.emails.send({
-        from: 'Aeonark Labs <noreply@aeonark.com>',
+        from: 'Aeonark Labs <onboarding@resend.dev>',
         to: [email],
         subject: 'Your Aeonark Labs Verification Code',
         html: `
@@ -147,9 +147,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Store OTP in database
       await storage.storeOtp(email, otp, otpExpiry);
 
-      // Send OTP via Resend
+      // Send OTP via Resend with onboarding@resend.dev (verified domain)
       const { data, error } = await resend.emails.send({
-        from: 'Aeonark Labs <noreply@aeonark.com>',
+        from: 'Aeonark Labs <onboarding@resend.dev>',
         to: [email],
         subject: 'Your Aeonark Labs Login Code',
         html: `
@@ -214,7 +214,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Send admin notification for new user
         try {
           await resend.emails.send({
-            from: 'Aeonark Labs <noreply@aeonark.com>',
+            from: 'Aeonark Labs <onboarding@resend.dev>',
             to: ['aeonark.lab@gmail.com'],
             subject: 'New User Signup - Aeonark Labs',
             html: `
