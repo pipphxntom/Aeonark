@@ -11,6 +11,7 @@ export interface IStorage {
   
   // OTP management
   createOtp(insertOtp: InsertOtp): Promise<OtpCode>;
+  storeOtp(email: string, code: string, expiresAt: Date): Promise<OtpCode>;
   getValidOtp(email: string, code: string): Promise<OtpCode | undefined>;
   incrementOtpAttempts(email: string, code: string): Promise<void>;
   deleteOtp(email: string, code: string): Promise<void>;
@@ -73,6 +74,14 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return otp;
+  }
+
+  async storeOtp(email: string, code: string, expiresAt: Date): Promise<OtpCode> {
+    return this.createOtp({
+      email,
+      code,
+      expiresAt,
+    });
   }
 
   async getValidOtp(email: string, code: string): Promise<OtpCode | undefined> {

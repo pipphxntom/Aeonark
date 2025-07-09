@@ -73,7 +73,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Signup endpoint - sends OTP for first-time users
+  // Signup endpoint - sends OTP for first-time users using Resend
   app.post('/api/auth/signup', async (req, res) => {
     try {
       const { email } = signupSchema.parse(req.body);
@@ -84,30 +84,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "User already exists. Please use login instead." });
       }
 
-      // Use Supabase to send OTP for signup
-      const { data, error } = await supabase.auth.signInWithOtp({
-        email: email,
-        options: {
-          shouldCreateUser: true,
-          data: {
-            email: email,
-          }
-        }
+      // Generate and store OTP
+      const otp = generateOTP();
+      const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+      // Store OTP in database
+      await storage.storeOtp(email, otp, otpExpiry);
+
+      // Send OTP via Resend
+      const { data, error } = await resend.emails.send({
+        from: 'Aeonark Labs <noreply@aeonark.com>',
+        to: [email],
+        subject: 'Your Aeonark Labs Verification Code',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #22c55e;">Welcome to Aeonark Labs!</h2>
+            <p>Your verification code is:</p>
+            <h1 style="font-size: 36px; color: #22c55e; letter-spacing: 8px; text-align: center; margin: 20px 0;">${otp}</h1>
+            <p>This code will expire in 10 minutes.</p>
+            <p>If you didn't request this code, please ignore this email.</p>
+            <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
+            <p style="color: #666; font-size: 12px;">© 2025 Aeonark Labs. All rights reserved.</p>
+          </div>
+        `,
       });
 
       if (error) {
-        console.error("Supabase signup error:", error);
-        // Handle rate limiting more gracefully
-        if (error.message.includes('email send rate limit')) {
-          return res.status(429).json({ 
-            error: "Please wait 60 seconds before requesting another code.",
-            retryAfter: 60
-          });
-        }
-        return res.status(400).json({ error: error.message });
+        console.error("Resend signup error:", error);
+        return res.status(400).json({ error: "Failed to send verification email" });
       }
 
-      console.log("Supabase signup OTP sent successfully:", data);
+      console.log("Resend signup OTP sent successfully:", data);
       res.json({ 
         success: true, 
         message: "Signup OTP sent successfully",
@@ -122,7 +129,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Login endpoint - sends OTP for existing users
+  // Login endpoint - sends OTP for existing users using Resend
   app.post('/api/auth/login', async (req, res) => {
     try {
       const { email } = loginSchema.parse(req.body);
@@ -133,27 +140,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "User not found. Please sign up first." });
       }
 
-      // Use Supabase to send OTP for login
-      const { data, error } = await supabase.auth.signInWithOtp({
-        email: email,
-        options: {
-          shouldCreateUser: false,
-        }
+      // Generate and store OTP
+      const otp = generateOTP();
+      const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+      // Store OTP in database
+      await storage.storeOtp(email, otp, otpExpiry);
+
+      // Send OTP via Resend
+      const { data, error } = await resend.emails.send({
+        from: 'Aeonark Labs <noreply@aeonark.com>',
+        to: [email],
+        subject: 'Your Aeonark Labs Login Code',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #22c55e;">Welcome back to Aeonark Labs!</h2>
+            <p>Your login code is:</p>
+            <h1 style="font-size: 36px; color: #22c55e; letter-spacing: 8px; text-align: center; margin: 20px 0;">${otp}</h1>
+            <p>This code will expire in 10 minutes.</p>
+            <p>If you didn't request this code, please ignore this email.</p>
+            <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
+            <p style="color: #666; font-size: 12px;">© 2025 Aeonark Labs. All rights reserved.</p>
+          </div>
+        `,
       });
 
       if (error) {
-        console.error("Supabase login error:", error);
-        // Handle rate limiting more gracefully
-        if (error.message.includes('email send rate limit')) {
-          return res.status(429).json({ 
-            error: "Please wait 60 seconds before requesting another code.",
-            retryAfter: 60
-          });
-        }
-        return res.status(400).json({ error: error.message });
+        console.error("Resend login error:", error);
+        return res.status(400).json({ error: "Failed to send login email" });
       }
 
-      console.log("Supabase login OTP sent successfully:", data);
+      console.log("Resend login OTP sent successfully:", data);
       res.json({ 
         success: true, 
         message: "Login OTP sent successfully",
@@ -169,37 +186,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Enhanced OTP verification with Supabase
+  // Custom OTP verification with Resend
   app.post('/api/auth/verify-otp', async (req, res) => {
     try {
       const { email, code } = otpVerificationSchema.parse(req.body);
       
-      // Verify OTP with Supabase
-      const { data, error } = await supabase.auth.verifyOtp({
-        email: email,
-        token: code,
-        type: 'email'
-      });
-
-      if (error) {
-        console.error("Supabase OTP verification error:", error);
-        return res.status(400).json({ error: error.message });
+      // Verify OTP from our database
+      const validOtp = await storage.getValidOtp(email, code);
+      
+      if (!validOtp) {
+        return res.status(400).json({ error: "Invalid or expired OTP code" });
       }
 
-      if (!data.user) {
-        return res.status(400).json({ error: "Invalid or expired OTP" });
-      }
+      // Delete the used OTP
+      await storage.deleteOtp(email, code);
 
       // Check if user exists in our database
       let user = await storage.getUserByEmail(email);
       
       if (!user) {
-        // Create new user in our database with Supabase user ID
+        // Create new user in our database
         user = await storage.createUser({
-          id: data.user.id,
           email: email,
           isOnboarded: false,
         });
+
+        // Send admin notification for new user
+        try {
+          await resend.emails.send({
+            from: 'Aeonark Labs <noreply@aeonark.com>',
+            to: ['aeonark.lab@gmail.com'],
+            subject: 'New User Signup - Aeonark Labs',
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #22c55e;">New User Signup</h2>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
+                <p>User has successfully completed email verification.</p>
+              </div>
+            `,
+          });
+        } catch (emailError) {
+          console.error("Failed to send admin notification:", emailError);
+        }
       }
 
       // Generate JWT token for our app
@@ -216,9 +245,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: user.id,
           email: user.email,
           fullName: user.fullName,
+          company: user.company,
+          primaryGoal: user.primaryGoal,
+          buildGoal: user.buildGoal,
           isOnboarded: user.isOnboarded,
         },
-        supabaseSession: data.session,
       });
     } catch (error) {
       console.error("Error verifying OTP:", error);
