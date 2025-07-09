@@ -91,6 +91,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.storeOtp(email, otp, otpExpiry);
 
       // Send OTP via Resend with onboarding@resend.dev (verified domain)
+      if (!resend) {
+        console.warn("RESEND_API_KEY not configured. Simulating OTP send for development.");
+        console.log(`Development Signup OTP for ${email}: ${otp}`);
+        res.json({ 
+          success: true, 
+          message: "Signup OTP sent successfully (development mode)",
+          mode: "signup"
+        });
+        return;
+      }
+      
       const { data, error } = await resend.emails.send({
         from: 'Aeonark Labs <onboarding@resend.dev>',
         to: [email],
@@ -147,6 +158,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.storeOtp(email, otp, otpExpiry);
 
       // Send OTP via Resend with onboarding@resend.dev (verified domain)
+      if (!resend) {
+        console.warn("RESEND_API_KEY not configured. Simulating OTP send for development.");
+        console.log(`Development Login OTP for ${email}: ${otp}`);
+        res.json({ 
+          success: true, 
+          message: "Login OTP sent successfully (development mode)",
+          mode: "login",
+          isOnboarded: existingUser.isOnboarded
+        });
+        return;
+      }
+      
       const { data, error } = await resend.emails.send({
         from: 'Aeonark Labs <onboarding@resend.dev>',
         to: [email],
@@ -211,8 +234,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
 
         // Send admin notification for new user
-        try {
-          await resend.emails.send({
+        if (resend) {
+          try {
+            await resend.emails.send({
             from: 'Aeonark Labs <onboarding@resend.dev>',
             to: ['aeonark.lab@gmail.com'],
             subject: 'New User Signup - Aeonark Labs',
@@ -225,8 +249,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
               </div>
             `,
           });
-        } catch (emailError) {
-          console.error("Failed to send admin notification:", emailError);
+          } catch (emailError) {
+            console.error("Failed to send admin notification:", emailError);
+          }
+        } else {
+          console.log(`Development: New user ${email} signed up successfully`);
         }
       }
 
