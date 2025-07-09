@@ -1,7 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co'
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key'
+// Fix URL format - add protocol if missing
+const rawUrl = import.meta.env.VITE_SUPABASE_URL || 'placeholder.supabase.co';
+const supabaseUrl = rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 

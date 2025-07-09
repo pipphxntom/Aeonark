@@ -1,7 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.SUPABASE_URL || ''
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || ''
+// Fix URL format - ensure proper protocol
+const rawUrl = process.env.SUPABASE_URL || 'placeholder.supabase.co';
+const supabaseUrl = rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'placeholder-key';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 

@@ -9,9 +9,11 @@ import { createClient } from '@supabase/supabase-js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Initialize Supabase client
+// Initialize Supabase client with proper URL format
+const rawUrl = process.env.SUPABASE_URL || '';
+const supabaseUrl = rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
 const supabase = createClient(
-  process.env.SUPABASE_URL!,
+  supabaseUrl,
   process.env.SUPABASE_ANON_KEY!
 );
 
