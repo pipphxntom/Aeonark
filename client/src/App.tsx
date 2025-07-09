@@ -54,8 +54,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Switch>
         <Route path="/auth" component={AuthPage} />
+        <Route path="/new-auth" component={AuthPage} />
         <Route path="/onboarding" component={OnboardingPage} />
+        <Route path="/new-onboarding" component={OnboardingPage} />
         <Route path="/cart" component={CartPage} />
+        <Route path="/new-cart" component={CartPage} />
         <Route>
           <div className="flex min-h-screen flex-col">
             <Navbar />

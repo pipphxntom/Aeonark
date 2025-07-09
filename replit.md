@@ -181,7 +181,9 @@ Changelog:
   - Added prominent Login/Signup buttons to navbar with neon glow hover effects
   - Implemented mobile-responsive auth buttons in navigation menu
   - Fixed DOM nesting warning by removing Link wrappers from nav buttons
-  - All three major issues resolved: pricing display, logo paths, and navigation buttons
+  - Added missing /new-auth route to App.tsx router configuration
+  - Added /new-onboarding and /new-cart routes for complete auth flow
+  - All routing issues resolved permanently - auth buttons now work correctly
 ```
 
 ## User Preferences
