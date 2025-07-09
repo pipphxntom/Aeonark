@@ -12,6 +12,9 @@ import Testimonials from "@/pages/Testimonials";
 import AeonForge from "@/pages/AeonForge";
 import AeonRFP from "@/pages/AeonRFP";
 import AeonAgent from "@/pages/AeonAgent";
+import AuthPage from "@/pages/AuthPage";
+import OnboardingPage from "@/pages/OnboardingPage";
+import CartPage from "@/pages/CartPage";
 import Navbar from "@/components/layouts/Navbar";
 import Footer from "@/components/layouts/Footer";
 
@@ -27,7 +30,21 @@ function Router() {
       <Route path="/aeonforge" component={AeonForge} />
       <Route path="/aeonrfp" component={AeonRFP} />
       <Route path="/aeonagent" component={AeonAgent} />
+      <Route path="/auth" component={AuthPage} />
+      <Route path="/onboarding" component={OnboardingPage} />
+      <Route path="/cart" component={CartPage} />
       <Route component={NotFound} />
+    </Switch>
+  );
+}
+
+function AuthRouter() {
+  return (
+    <Switch>
+      <Route path="/auth" component={AuthPage} />
+      <Route path="/onboarding" component={OnboardingPage} />
+      <Route path="/cart" component={CartPage} />
+      <Route component={Router} />
     </Switch>
   );
 }
@@ -35,13 +52,20 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col">
-        <Navbar />
-        <main className="flex-1">
-          <Router />
-        </main>
-        <Footer />
-      </div>
+      <Switch>
+        <Route path="/auth" component={AuthPage} />
+        <Route path="/onboarding" component={OnboardingPage} />
+        <Route path="/cart" component={CartPage} />
+        <Route>
+          <div className="flex min-h-screen flex-col">
+            <Navbar />
+            <main className="flex-1">
+              <Router />
+            </main>
+            <Footer />
+          </div>
+        </Route>
+      </Switch>
       <Toaster />
     </QueryClientProvider>
   );

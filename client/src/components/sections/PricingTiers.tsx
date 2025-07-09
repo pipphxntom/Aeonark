@@ -139,6 +139,19 @@ const serviceData = {
   }
 };
 
+function getPlanType(planName: string): string {
+  switch (planName) {
+    case 'Starter Site':
+      return 'starter';
+    case 'Growth Bundle':
+      return 'growth';
+    case 'Scale Forge':
+      return 'scale';
+    default:
+      return 'starter';
+  }
+}
+
 export default function PricingTiers() {
   const [selectedService, setSelectedService] = useState<ServiceType>('AeonForge');
   const currentService = serviceData[selectedService];
@@ -223,7 +236,7 @@ export default function PricingTiers() {
                   </ul>
                   
                   <div className="mt-auto">
-                    <Link href="/contact">
+                    <Link href={`/auth?plan=${getPlanType(tier.name)}`}>
                       <Button className={cn(
                         "w-full py-3 rounded-lg transition-all font-bold text-base",
                         tier.popular 
