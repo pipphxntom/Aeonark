@@ -173,6 +173,14 @@ Changelog:
   - Added Login/Signup buttons to navbar with neon glow hover effects
   - Integrated mobile-responsive auth buttons in navigation menu
   - Project now fully operational in Replit environment with proper fallbacks
+- July 09, 2025. Complete Bug Fixes and Final Polish:
+  - Fixed all pricing inconsistencies across CartPage.tsx and NewCartPage.tsx
+  - Updated PLAN_PRICES to correct values (starter: ₹4,999, growth: ₹14,999, scale: ₹49,999)
+  - Fixed AVAILABLE_ADDONS pricing (AI Chatbot: ₹2,999, Mobile App: ₹5,000, Maintenance: ₹999)
+  - Corrected logo paths in both cart pages from "/Aeonark/aeonark-logo.png" to "/Aeonark/src/assets/aeonark-logo.png"
+  - Added prominent Login/Signup buttons to navbar with neon glow hover effects
+  - Implemented mobile-responsive auth buttons in navigation menu
+  - All three major issues resolved: pricing display, logo paths, and navigation buttons
 ```
 
 ## User Preferences
