@@ -41,7 +41,7 @@ export default function ContactForm() {
         from_email: formData.email,
         subject: formData.subject,
         message: formData.message,
-        to_email: 'aeonark.labs@gmail.com'
+        to_email: 'aeonark.lab@gmail.com'
       };
       
       console.log('Sending email with params:', templateParams);
@@ -152,7 +152,7 @@ export default function ContactForm() {
                 {submitStatus === 'error' && (
                   <div className="mb-4 p-4 bg-red-100 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
                     <p className="text-red-800 dark:text-red-200">
-                      Sorry, there was an error sending your message. Please try again or contact us directly at aeonark.labs@gmail.com.
+                      Sorry, there was an error sending your message. Please try again or contact us directly at aeonark.lab@gmail.com.
                     </p>
                   </div>
                 )}
@@ -175,7 +175,7 @@ export default function ContactForm() {
                   </div>
                   <div>
                     <h4 className="text-sm font-medium text-foreground/60">Email</h4>
-                    <p>aeonark.labs@gmail.com</p>
+                    <p>aeonark.lab@gmail.com</p>
                   </div>
                 </div>
                 <div className="flex items-start">

@@ -5,7 +5,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useMobile } from "@/hooks/use-mobile";
-import aeonarkLogo from "@/assets/aeonark-logo.jpg";
+import aeonarkLogo from "@/assets/aeonark-logo.png";
 
 const navigationItems = [
   { name: "Home", href: "/" },
