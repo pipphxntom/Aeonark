@@ -7,15 +7,14 @@ import { z } from "zod";
 import { Resend } from "resend";
 import { createClient } from '@supabase/supabase-js';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
-// Initialize Supabase client with proper URL format
+// Initialize Supabase client with proper URL format (optional for development)
 const rawUrl = process.env.SUPABASE_URL || '';
 const supabaseUrl = rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
-const supabase = createClient(
-  supabaseUrl,
-  process.env.SUPABASE_ANON_KEY!
-);
+const supabase = (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) 
+  ? createClient(supabaseUrl, process.env.SUPABASE_ANON_KEY)
+  : null;
 
 // JWT secret - in production, use a proper secret from environment
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";

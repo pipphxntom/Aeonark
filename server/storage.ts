@@ -165,4 +165,135 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = new DatabaseStorage();
+// In-memory storage implementation for development/migration
+export class MemStorage implements IStorage {
+  private users: Map<string, User> = new Map();
+  private usersByEmail: Map<string, User> = new Map();
+  private otps: Map<string, OtpCode> = new Map();
+  private carts: Map<string, CartItem> = new Map();
+  private cartIdCounter = 1;
+  
+  // User management
+  async getUser(id: string): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return this.usersByEmail.get(email);
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const user: User = {
+      id: crypto.randomUUID(),
+      ...insertUser,
+      isOnboarded: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.users.set(user.id, user);
+    this.usersByEmail.set(user.email, user);
+    return user;
+  }
+
+  async updateUser(id: string, updates: Partial<User>): Promise<User> {
+    const existing = this.users.get(id);
+    if (!existing) throw new Error("User not found");
+    
+    const user: User = {
+      ...existing,
+      ...updates,
+      updatedAt: new Date(),
+    };
+    this.users.set(id, user);
+    this.usersByEmail.set(user.email, user);
+    return user;
+  }
+
+  // OTP management
+  async createOtp(insertOtp: InsertOtp): Promise<OtpCode> {
+    const otp: OtpCode = {
+      id: this.cartIdCounter++,
+      ...insertOtp,
+      attempts: 0,
+      createdAt: new Date(),
+    };
+    this.otps.set(`${insertOtp.email}:${insertOtp.code}`, otp);
+    return otp;
+  }
+
+  async storeOtp(email: string, code: string, expiresAt: Date): Promise<OtpCode> {
+    // Delete existing OTP for email
+    for (const [key, otp] of this.otps) {
+      if (otp.email === email) {
+        this.otps.delete(key);
+      }
+    }
+    
+    return this.createOtp({ email, code, expiresAt });
+  }
+
+  async getValidOtp(email: string, code: string): Promise<OtpCode | undefined> {
+    const otp = this.otps.get(`${email}:${code}`);
+    if (!otp || otp.expiresAt < new Date()) return undefined;
+    return otp;
+  }
+
+  async incrementOtpAttempts(email: string, code: string): Promise<void> {
+    const otp = this.otps.get(`${email}:${code}`);
+    if (otp) {
+      otp.attempts++;
+    }
+  }
+
+  async deleteOtp(email: string, code: string): Promise<void> {
+    this.otps.delete(`${email}:${code}`);
+  }
+
+  async cleanupExpiredOtps(): Promise<void> {
+    const now = new Date();
+    for (const [key, otp] of this.otps) {
+      if (otp.expiresAt < now) {
+        this.otps.delete(key);
+      }
+    }
+  }
+
+  // Cart management
+  async getCartByUserId(userId: string): Promise<CartItem | undefined> {
+    for (const cart of this.carts.values()) {
+      if (cart.userId === userId) return cart;
+    }
+    return undefined;
+  }
+
+  async createCartItem(insertCartItem: InsertCartItem): Promise<CartItem> {
+    const cartItem: CartItem = {
+      id: this.cartIdCounter++,
+      ...insertCartItem,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.carts.set(cartItem.id.toString(), cartItem);
+    return cartItem;
+  }
+
+  async updateCartItem(id: number, updates: Partial<CartItem>): Promise<CartItem> {
+    const existing = this.carts.get(id.toString());
+    if (!existing) throw new Error("Cart item not found");
+    
+    const cartItem: CartItem = {
+      ...existing,
+      ...updates,
+      updatedAt: new Date(),
+    };
+    this.carts.set(id.toString(), cartItem);
+    return cartItem;
+  }
+
+  async deleteCartItem(id: number): Promise<void> {
+    this.carts.delete(id.toString());
+  }
+}
+
+// Use in-memory storage for development/migration, DatabaseStorage for production
+export const storage = process.env.DATABASE_URL ? new DatabaseStorage() : new MemStorage();
