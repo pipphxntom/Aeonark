@@ -180,6 +180,7 @@ Changelog:
   - Corrected logo paths in both cart pages from "/Aeonark/aeonark-logo.png" to "/Aeonark/src/assets/aeonark-logo.png"
   - Added prominent Login/Signup buttons to navbar with neon glow hover effects
   - Implemented mobile-responsive auth buttons in navigation menu
+  - Fixed DOM nesting warning by removing Link wrappers from nav buttons
   - All three major issues resolved: pricing display, logo paths, and navigation buttons
 ```
 
