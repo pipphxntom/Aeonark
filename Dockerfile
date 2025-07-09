@@ -32,13 +32,14 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Copy built application
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/dist ./dist # Server build files
+COPY --from=builder /app/client/dist ./client/dist # Client build files
 COPY --from=builder /app/package*.json ./
 COPY --from=deps /app/node_modules ./node_modules
 
 # Copy additional necessary files
-COPY --from=builder /app/client/src/assets ./client/src/assets
-COPY --from=builder /app/attached_assets ./attached_assets
+# COPY --from=builder /app/client/src/assets ./client/src/assets # Assuming these are bundled into client/dist
+COPY --from=builder /app/attached_assets ./attached_assets # These seem like separate, needed assets
 
 # Set correct permissions
 RUN chown -R nextjs:nodejs /app
@@ -50,10 +51,11 @@ EXPOSE 5000
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=5000
+ENV HOST=0.0.0.0
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:5000/api/health || exit 1
+  CMD curl -f http://localhost:${PORT}/api/health || exit 1
 
 # Start the application
 CMD ["npm", "start"]
