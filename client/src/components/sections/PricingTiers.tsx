@@ -236,16 +236,16 @@ export default function PricingTiers() {
                   </ul>
                   
                   <div className="mt-auto">
-                    <Link href={`/auth?plan=${getPlanType(tier.name)}`}>
-                      <Button className={cn(
+                    <Button 
+                      onClick={() => window.location.href = `/auth?plan=${getPlanType(tier.name)}`}
+                      className={cn(
                         "w-full py-3 rounded-lg transition-all font-bold text-base",
                         tier.popular 
                           ? `bg-[hsl(var(--${currentService.color}))] text-white hover:shadow-lg hover:shadow-[hsl(var(--${currentService.color}))]/30 border-2 border-[hsl(var(--${currentService.color}))] ring-1 ring-[hsl(var(--${currentService.color}))]/50`
                           : `text-white bg-[hsl(var(--${currentService.color}))] hover:bg-[hsl(var(--${currentService.color}))]/80 border-2 border-[hsl(var(--${currentService.color}))] hover:shadow-lg hover:shadow-[hsl(var(--${currentService.color}))]/30`
                       )}>
                         Choose Plan
-                      </Button>
-                    </Link>
+                    </Button>
                   </div>
                 </div>
               </div>

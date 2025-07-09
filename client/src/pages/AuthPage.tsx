@@ -61,9 +61,10 @@ export default function AuthPage() {
       otpForm.setValue('email', email);
     },
     onError: (error: any) => {
+      console.error('Send OTP error:', error);
       toast({
         title: "Error",
-        description: error.response?.data?.error || "Failed to send OTP. Please try again.",
+        description: error.message || "Failed to send OTP. Please try again.",
         variant: "destructive",
       });
     },
@@ -90,9 +91,10 @@ export default function AuthPage() {
       }
     },
     onError: (error: any) => {
+      console.error('Verify OTP error:', error);
       toast({
         title: "Error",
-        description: error.response?.data?.error || "Invalid OTP. Please try again.",
+        description: error.message || "Invalid OTP. Please try again.",
         variant: "destructive",
       });
     },
@@ -108,7 +110,15 @@ export default function AuthPage() {
   };
 
   const resendOtp = () => {
-    sendOtpMutation.mutate({ email });
+    if (email) {
+      sendOtpMutation.mutate({ email });
+    } else {
+      toast({
+        title: "Error",
+        description: "Please enter your email first.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
