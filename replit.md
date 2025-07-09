@@ -145,6 +145,14 @@ Changelog:
   - Added proper routing for auth flow without navbar/footer interference
   - Implemented brute-force protection and OTP expiry security measures
   - Added comprehensive form validation and error handling throughout
+- July 09, 2025. UI/UX Improvements and Localization:
+  - Fixed DOM nesting errors in Footer and PricingTiers components
+  - Changed currency from USD ($) to Indian Rupees (₹) throughout cart system
+  - Added twinkling stars background animation to OnboardingPage and CartPage
+  - Integrated Aeonark Labs logo next to "Welcome to Aeonark Labs" in onboarding
+  - Added logo to cart page header in top-left navigation area
+  - Enhanced error handling in API client with proper JSON parsing
+  - Improved authentication flow with better error messages and debugging
 ```
 
 ## User Preferences

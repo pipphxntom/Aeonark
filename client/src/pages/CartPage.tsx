@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Loader2, ShoppingCart, User, Mail, Building, Star, Bot, Smartphone, Wrench } from "lucide-react";
+import TwinklingStars from "@/components/animations/TwinklingStars";
 
 interface User {
   id: number;
@@ -162,14 +163,28 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 to-green-900/10" />
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      {/* Twinkling Stars Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 to-green-900/10" />
+        <TwinklingStars />
+      </div>
       
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2">Your Cart</h1>
-            <p className="text-gray-400">Review your selection and proceed to checkout</p>
+          {/* Header with Logo */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4">
+              <img 
+                src="/Aeonark/aeonark-logo.png" 
+                alt="Aeonark Labs" 
+                className="h-10 w-10 object-contain"
+              />
+              <div>
+                <h1 className="text-3xl font-bold">Your Cart</h1>
+                <p className="text-gray-400">Review your selection and proceed to checkout</p>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -243,7 +258,7 @@ export default function CartPage() {
                           Selected
                         </Badge>
                         <p className="text-lg font-bold mt-1">
-                          ${PLAN_PRICES[planType as keyof typeof PLAN_PRICES]?.toLocaleString()}
+                          ₹{PLAN_PRICES[planType as keyof typeof PLAN_PRICES]?.toLocaleString()}
                         </p>
                       </div>
                     </div>
@@ -275,7 +290,7 @@ export default function CartPage() {
                             <p className="text-sm text-gray-400">{addon.description}</p>
                           </div>
                           <div className="text-right">
-                            <p className="font-semibold">+${addon.price}</p>
+                            <p className="font-semibold">+₹{addon.price}</p>
                           </div>
                         </div>
                       ))}
@@ -288,7 +303,7 @@ export default function CartPage() {
                   <div className="bg-gray-800 rounded-lg p-4">
                     <div className="flex items-center justify-between text-lg font-bold">
                       <span>Total</span>
-                      <span className="text-green-400">${calculateTotal().toLocaleString()}</span>
+                      <span className="text-green-400">₹{calculateTotal().toLocaleString()}</span>
                     </div>
                     <p className="text-sm text-gray-400 mt-2">
                       One-time payment • No hidden fees • 30-day money-back guarantee

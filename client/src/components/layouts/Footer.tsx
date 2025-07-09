@@ -54,9 +54,9 @@ export default function Footer() {
             <nav className="flex flex-wrap justify-center md:justify-end gap-6 mb-4">
               {navigationItems.map((item) => (
                 <Link key={item.name} href={item.href}>
-                  <span className="text-foreground/70 hover:text-[hsl(var(--neon-blue))] transition-colors cursor-pointer">
+                  <div className="text-foreground/70 hover:text-[hsl(var(--neon-blue))] transition-colors cursor-pointer">
                     {item.name}
-                  </span>
+                  </div>
                 </Link>
               ))}
             </nav>

@@ -13,6 +13,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Loader2, User, Building, Target, Lightbulb } from "lucide-react";
+import TwinklingStars from "@/components/animations/TwinklingStars";
 
 export default function OnboardingPage() {
   const [, navigate] = useLocation();
@@ -66,12 +67,23 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 to-green-900/10" />
+    <div className="min-h-screen bg-black text-white flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Twinkling Stars Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 to-green-900/10" />
+        <TwinklingStars />
+      </div>
       
       <div className="relative z-10 w-full max-w-2xl">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">Welcome to Aeonark Labs</h1>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <img 
+              src="/Aeonark/aeonark-logo.png" 
+              alt="Aeonark Labs" 
+              className="h-12 w-12 object-contain"
+            />
+            <h1 className="text-3xl font-bold">Welcome to Aeonark Labs</h1>
+          </div>
           <p className="text-gray-400">Let's personalize your experience</p>
         </div>
 
