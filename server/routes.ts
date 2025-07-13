@@ -3,16 +3,16 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { authSchema, otpVerificationSchema, onboardingSchema, emailCheckSchema, signupSchema, loginSchema } from "@shared/schema";
 import jwt from "jsonwebtoken";
-import { z } from "zod";
-import { Resend } from "resend";
-import { createClient } from '@supabase/supabase-js';
+import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+const mailerSend = process.env.MAILERSEND_API_KEY ? new MailerSend({
+    apiKey: process.env.MAILERSEND_API_KEY,
+}) : null;
 
 // Initialize Supabase client with proper URL format (optional for development)
 const rawUrl = process.env.SUPABASE_URL || '';
 const supabaseUrl = rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`;
-const supabase = (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) 
+const supabase = (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY)
   ? createClient(supabaseUrl, process.env.SUPABASE_ANON_KEY)
   : null;
 
@@ -90,23 +90,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Store OTP in database
       await storage.storeOtp(email, otp, otpExpiry);
 
-      // Send OTP via Resend with onboarding@resend.dev (verified domain)
-      if (!resend) {
-        console.warn("RESEND_API_KEY not configured. Simulating OTP send for development.");
+      // Send OTP via MailerSend
+      if (!mailerSend) {
+        console.warn("MAILERSEND_API_KEY not configured. Simulating OTP send for development.");
         console.log(`Development Signup OTP for ${email}: ${otp}`);
-        res.json({ 
-          success: true, 
+        res.json({
+          success: true,
           message: "Signup OTP sent successfully (development mode)",
           mode: "signup"
         });
         return;
       }
-      
-      const { data, error } = await resend.emails.send({
-        from: 'Aeonark Labs <onboarding@resend.dev>',
-        to: [email],
-        subject: 'Your Aeonark Labs Verification Code',
-        html: `
+
+      const sentFrom = new Sender("sender@aeonark.dev", "Aeonark Labs");
+      const recipients = [new Recipient(email)];
+      const emailParams = new EmailParams()
+        .setFrom(sentFrom)
+        .setTo(recipients)
+        .setSubject("Your Aeonark Labs Verification Code")
+        .setHtml(`
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #22c55e;">Welcome to Aeonark Labs!</h2>
             <p>Your verification code is:</p>
@@ -116,15 +118,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
             <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
             <p style="color: #666; font-size: 12px;">© 2025 Aeonark Labs. All rights reserved.</p>
           </div>
-        `,
-      });
+        `);
 
-      if (error) {
-        console.error("Resend signup error:", error);
+      try {
+        await mailerSend.email.send(emailParams);
+        console.log("MailerSend signup OTP sent successfully");
+      } catch (error) {
+        console.error("MailerSend signup error:", error);
         return res.status(400).json({ error: "Failed to send verification email" });
       }
-
-      console.log("Resend signup OTP sent successfully:", data);
       res.json({ 
         success: true, 
         message: "Signup OTP sent successfully",
@@ -157,24 +159,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Store OTP in database
       await storage.storeOtp(email, otp, otpExpiry);
 
-      // Send OTP via Resend with onboarding@resend.dev (verified domain)
-      if (!resend) {
-        console.warn("RESEND_API_KEY not configured. Simulating OTP send for development.");
+      // Send OTP via MailerSend
+      if (!mailerSend) {
+        console.warn("MAILERSEND_API_KEY not configured. Simulating OTP send for development.");
         console.log(`Development Login OTP for ${email}: ${otp}`);
-        res.json({ 
-          success: true, 
+        res.json({
+          success: true,
           message: "Login OTP sent successfully (development mode)",
           mode: "login",
           isOnboarded: existingUser.isOnboarded
         });
         return;
       }
-      
-      const { data, error } = await resend.emails.send({
-        from: 'Aeonark Labs <onboarding@resend.dev>',
-        to: [email],
-        subject: 'Your Aeonark Labs Login Code',
-        html: `
+
+      const sentFrom = new Sender("sender@aeonark.dev", "Aeonark Labs");
+      const recipients = [new Recipient(email)];
+      const emailParams = new EmailParams()
+        .setFrom(sentFrom)
+        .setTo(recipients)
+        .setSubject("Your Aeonark Labs Login Code")
+        .setHtml(`
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #22c55e;">Welcome back to Aeonark Labs!</h2>
             <p>Your login code is:</p>
@@ -184,15 +188,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
             <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
             <p style="color: #666; font-size: 12px;">© 2025 Aeonark Labs. All rights reserved.</p>
           </div>
-        `,
-      });
+        `);
 
-      if (error) {
-        console.error("Resend login error:", error);
+      try {
+        await mailerSend.email.send(emailParams);
+        console.log("MailerSend login OTP sent successfully");
+      } catch (error) {
+        console.error("MailerSend login error:", error);
         return res.status(400).json({ error: "Failed to send login email" });
       }
-
-      console.log("Resend login OTP sent successfully:", data);
       res.json({ 
         success: true, 
         message: "Login OTP sent successfully",
@@ -234,21 +238,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
 
         // Send admin notification for new user
-        if (resend) {
-          try {
-            await resend.emails.send({
-            from: 'Aeonark Labs <onboarding@resend.dev>',
-            to: ['aeonark.lab@gmail.com'],
-            subject: 'New User Signup - Aeonark Labs',
-            html: `
+        if (mailerSend) {
+          const sentFrom = new Sender("sender@aeonark.dev", "Aeonark Labs");
+          const recipients = [new Recipient("aeonark.lab@gmail.com")];
+          const emailParams = new EmailParams()
+            .setFrom(sentFrom)
+            .setTo(recipients)
+            .setSubject("New User Signup - Aeonark Labs")
+            .setHtml(`
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                 <h2 style="color: #22c55e;">New User Signup</h2>
                 <p><strong>Email:</strong> ${email}</p>
                 <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
                 <p>User has successfully completed email verification.</p>
               </div>
-            `,
-          });
+            `);
+          try {
+            await mailerSend.email.send(emailParams);
           } catch (emailError) {
             console.error("Failed to send admin notification:", emailError);
           }
@@ -393,12 +399,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const user = await storage.getUser(req.user.userId);
       
       // Send admin notification email
-      if (user) {
-        await resend.emails.send({
-          from: "Aeonark Labs <onboarding@resend.dev>",
-          to: "aeonark.lab@gmail.com",
-          subject: "🧠 New User Joined Aeonark Labs",
-          html: `
+      if (user && mailerSend) {
+        const sentFrom = new Sender("sender@aeonark.dev", "Aeonark Labs");
+        const recipients = [new Recipient("aeonark.lab@gmail.com")];
+        const emailParams = new EmailParams()
+          .setFrom(sentFrom)
+          .setTo(recipients)
+          .setSubject("🧠 New User Joined Aeonark Labs")
+          .setHtml(`
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
               <h2 style="color: #333;">🧠 New User Joined Aeonark Labs</h2>
               <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
@@ -414,8 +422,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 Time: ${new Date().toISOString()}
               </p>
             </div>
-          `,
-          text: `New User Joined Aeonark Labs
+          `)
+          .setText(`New User Joined Aeonark Labs
 
 Name: ${user.fullName || 'Not provided'}
 Email: ${user.email}
@@ -425,8 +433,13 @@ Primary Goal: ${user.primaryGoal || 'Not provided'}
 Build Goal: ${user.buildGoal || 'Not provided'}
 Add-ons: ${addOns.length > 0 ? addOns.map((addon: any) => addon.name).join(', ') : 'None'}
 
-Time: ${new Date().toISOString()}`,
-        });
+Time: ${new Date().toISOString()}`);
+
+        try {
+          await mailerSend.email.send(emailParams);
+        } catch (error) {
+          console.error("MailerSend cart notification error:", error);
+        }
       }
 
       res.json({
@@ -452,46 +465,65 @@ Time: ${new Date().toISOString()}`,
         });
       }
 
-      // Send email using Resend
-      const emailResult = await resend.emails.send({
-        from: "Aeonark Labs Contact <onboarding@resend.dev>", // Using Resend's verified domain
-        to: "aeonark.lab@gmail.com",
-        reply_to: email, // Allow replies to go to the person who submitted the form
-        subject: `New Contact Form Submission: ${subject}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #333; border-bottom: 2px solid #0ea5e9; padding-bottom: 10px;">New Contact Form Submission</h2>
-            <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0;">
-              <p><strong>Name:</strong> ${name}</p>
-              <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-              <p><strong>Subject:</strong> ${subject}</p>
+      // Send email using MailerSend
+      if (!mailerSend) {
+        console.error("MailerSend not configured");
+        return res.status(500).json({
+            success: false,
+            message: 'There was an error sending your message. Please try again later.'
+        });
+      }
+
+      const sentFrom = new Sender("sender@aeonark.dev", "Aeonark Labs Contact");
+      const recipients = [new Recipient("aeonark.lab@gmail.com")];
+      const replyTo = new Sender(email, name);
+      const emailParams = new EmailParams()
+          .setFrom(sentFrom)
+          .setTo(recipients)
+          .setReplyTo(replyTo)
+          .setSubject(`New Contact Form Submission: ${subject}`)
+          .setHtml(`
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <h2 style="color: #333; border-bottom: 2px solid #0ea5e9; padding-bottom: 10px;">New Contact Form Submission</h2>
+              <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+                <p><strong>Subject:</strong> ${subject}</p>
+              </div>
+              <div style="background: #fff; padding: 15px; border-left: 4px solid #0ea5e9; margin: 20px 0;">
+                <h3>Message:</h3>
+                <p style="line-height: 1.6;">${message.replace(/\n/g, '<br>')}</p>
+              </div>
+              <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
+              <p style="font-size: 12px; color: #888;">
+                This email was sent from the Aeonark Labs contact form on your website.
+              </p>
             </div>
-            <div style="background: #fff; padding: 15px; border-left: 4px solid #0ea5e9; margin: 20px 0;">
-              <h3>Message:</h3>
-              <p style="line-height: 1.6;">${message.replace(/\n/g, '<br>')}</p>
-            </div>
-            <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
-            <p style="font-size: 12px; color: #888;">
-              This email was sent from the Aeonark Labs contact form on your website.
-            </p>
-          </div>
-        `,
-        text: `
-New Contact Form Submission
+          `)
+          .setText(`
+  New Contact Form Submission
 
-Name: ${name}
-Email: ${email}
-Subject: ${subject}
+  Name: ${name}
+  Email: ${email}
+  Subject: ${subject}
 
-Message:
-${message}
+  Message:
+  ${message}
 
----
-This email was sent from the Aeonark Labs contact form on your website.
-        `,
-      });
+  ---
+  This email was sent from the Aeonark Labs contact form on your website.
+          `);
 
-      console.log("Email sent successfully:", emailResult);
+      try {
+        await mailerSend.email.send(emailParams);
+        console.log("Email sent successfully via MailerSend");
+      } catch (error) {
+        console.error("Error sending email via MailerSend:", error);
+        return res.status(500).json({
+            success: false,
+            message: 'There was an error sending your message. Please try again later.'
+        });
+      }
       
       return res.status(200).json({
         success: true,

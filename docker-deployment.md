@@ -104,7 +104,7 @@ services:
       - SUPABASE_URL=https://your-project.supabase.co
       - SUPABASE_ANON_KEY=your-anon-key
       - SUPABASE_SERVICE_KEY=your-service-key
-      - RESEND_API_KEY=your-resend-key
+      - MAILERSEND_API_KEY=your-mailersend-key
     restart: unless-stopped
 ```
 
