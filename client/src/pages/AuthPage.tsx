@@ -109,7 +109,7 @@ export default function AuthPage() {
     verifyOtpMutation.mutate(data);
   };
 
-  const resendOtp = () => {
+  const handleResendOtp = () => {
     if (email) {
       sendOtpMutation.mutate({ email });
     } else {
@@ -245,7 +245,7 @@ export default function AuthPage() {
                       <div className="text-center">
                         <button
                           type="button"
-                          onClick={resendOtp}
+                          onClick={handleResendOtp}
                           className="text-blue-400 hover:text-blue-300 text-sm"
                           disabled={sendOtpMutation.isPending}
                         >

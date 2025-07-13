@@ -199,7 +199,7 @@ export default function NewAuthPage() {
     verifyOtpMutation.mutate(data);
   };
 
-  const resendOtp = async () => {
+  const handleResendOtp = async () => {
     try {
       if (authMode === 'signup') {
         await sendSignupOtp(email);
@@ -340,7 +340,7 @@ export default function NewAuthPage() {
                 <div className="text-center">
                   <Button
                     variant="ghost"
-                    onClick={resendOtp}
+                    onClick={handleResendOtp}
                     className="text-gray-400 hover:text-white text-sm"
                     disabled={checkEmailMutation.isPending}
                   >
